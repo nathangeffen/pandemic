@@ -2,7 +2,7 @@
 
 (function(simulation, undefined) {
 
-    class Model {
+    class Engine {
 
         constructor(dict) {
             this.currentIteration = 0;
@@ -33,14 +33,7 @@
         run() {
             this.running = !this.running;
             if (this.running === true) {
-                if (this.onExecute !== undefined) {
-                    this.onExecute(this.executeElem);
-                }
                 this.loop();
-            } else {
-                if (this.onStop !== undefined) {
-                    this.onStop(this.executeElem);
-                }
             }
         }
 
@@ -61,18 +54,12 @@
 
     }
 
-    let models = [];
+    let engines = [];
 
-    simulation.createModel = function(dict) {
-        let model = new Model(dict);
-        if (model.executeElem !== undefined) {
-            model.executeElem.addEventListener("click", function() {
-                model.run();
-            });
-        }
-
-        models.push(model);
-        return model;
+    simulation.create = function(dict) {
+        let engine = new Engine(dict);
+        engines.push(engine);
+        return engine;
     }
 
 } (window.Simulation = window.Simulation || {}))

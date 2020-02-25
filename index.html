@@ -63,25 +63,37 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 pane pane-left">
+                <div class="col-sm-6 col-xs-12 pane pane-left">
                     <h3>Parameters</h3>
+                    <div class="form-group">
+                        <label for="parameter-regions">Regions</label>
+                        <textarea class="form-control"
+                                  id="parameter-regions" rows="6">
+                        </textarea>
+                        <label for="parameter-migrations">Migrations</label>
+                        <textarea class="form-control"
+                                  id="parameter-migrations" rows="6">
+                        </textarea>
+
+                    </div>
+
                     <button id="simulate-button" class="btn btn-primary">
                         Simulate
                     </button>
                 </div>
                 <div id="charts"
-                     class="col-sm-6 pane pane-right">
+                     class="col-sm-6 col-xs-12 pane pane-right">
                     <canvas id="chart">
                     </canvas>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 pane pane-left">
+                <div class="col-sm-6 col-xs-12 pane pane-left">
                     <h3>Results</h3>
                     <p id="results" class="pre-scrollable">
                     </p>
                 </div>
-                <div class="col-sm-6 pane pane-right">
+                <div class="col-sm-6 col-xs-12 pane pane-right">
                     <div id="mapcontainer">
                         <div class="map">
                             <span>World map showing infections</span>
@@ -116,142 +128,9 @@
         <script src="js/jquery.mapael.min.js"></script>
         <script src="js/world_countries.min.js"></script>
         <script src="js/pandemic.js"></script>
+        <script src="js/infectionchart.js"></script>
+        <script src="js/infectionmap.js"></script>
         <script src="js/simulation.js"></script>
-        <script>
-
-
-         Pandemic.createModel({
-             name: "toy-covid-19",
-             description: "Very over-simplified attempt to model \
-             Covid-19 outbreak. Note: This model has serious limitations.",
-             executeElem: "simulate-button",
-             onExecute: (elem) => {
-                 elem.innerHTML = "Stop";
-                 elem.classList.remove("btn-primary");
-                 elem.classList.add("btn-danger");
-             },
-             onStop: (elem) => {
-                 elem.innerHTML = "Simulate";
-                 elem.classList.add("btn-primary");
-                 elem.classList.remove("btn-danger");
-             },
-             resultsElem: "results",
-             chartInfections: "chart",
-             iterations: 365,
-             iterationName: "Day",
-             defaultInfectionRates: {
-                 incidence: 0.21,
-                 lockdown: 0.01,
-                 uncontagious_contagious: 0.3,
-                 contagious_ill: 0.4,
-                 ill_cured: 0.07,
-                 ill_dead: 0.00033,
-                 default_rate: 0.0
-             },
-             regions: [
-                 {
-                     name: "china",
-                     stages: {
-                         unsusceptible: 0.0,
-                         susceptible: 1439000000.0,
-                         uncontagious: 10.0,
-                         contagious: 0.0,
-                         ill: 0.0,
-                         cured: 0.0,
-                         dead: 0.0
-                     }
-                 },
-                 {
-                     name: "india",
-                     stages: {
-                         unsusceptible: 1352000000.0,
-                         susceptible: 90000000.0,
-                         uncontagious: 0.0,
-                         contagious: 0.0,
-                         ill: 0.0,
-                         cured: 0.0,
-                         dead: 0.0
-                     }
-                 },
-                 {
-                     name: "south africa",
-                     stages: {
-                         unsusceptible: 20000000.0,
-                         susceptible: 35000000.0,
-                         uncontagious: 0.0,
-                         contagious: 0.0,
-                         ill: 0.0,
-                         cured: 0.0,
-                         dead: 0.0
-                     }
-                 }
-             ],
-             migrations:  [
-                 {
-                     "from": "china",
-                     to: "india",
-                     rate: 0.00071,
-                     symmetrical: 0.9999,
-                     illCorrection: 0.1
-                 },
-                 {
-                     "from": "south africa",
-                     to: "india",
-                     actual: 1000,
-                     symmetrical: 1.0,
-                     illCorrection: 0.1
-                 },
-                 {
-                     "from": "south africa",
-                     to: "china",
-                     actual: 2000,
-                     symmetrical: 0.9999,
-                     illCorrection: 0.1
-                 }
-             ]
-         });
-
-         var mapRegions = {
-             "CN": ["china"],
-             "ZA": ["south africa"],
-             "IN": ["india"]
-         }
-
-         $(function () {
-             $("#mapcontainer").mapael({
-                 map: {
-                     name: "world_countries"
-                 },
-                 areas: {
-                     "CN": {
-                         "cssClass": "very-serious",
-                         "value": 23843930,
-                         "tooltip": {"content": "China: 23843930"}
-                     }
-                 },
-
-             });
-         });
-
-         Simulation.createModel(
-             {
-                 name: "toy-covid-19",
-                 description: "Very over-simplified attempt to model \
-             Covid-19 outbreak. Note: This model has serious limitations.",
-                 executeElem: "simulate-button",
-                 iterations: 365,
-                 onExecute: (elem) => {
-                     elem.innerHTML = "Stop";
-                     elem.classList.remove("btn-primary");
-                     elem.classList.add("btn-danger");
-                 },
-                 onStop: (elem) => {
-                     elem.innerHTML = "Simulate";
-                     elem.classList.add("btn-primary");
-                     elem.classList.remove("btn-danger");
-                 },
-             }
-         );
-        </script>
+        <script src="js/userinterface.js"></script>
     </body>
 </html>

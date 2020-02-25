@@ -28,6 +28,11 @@
 
     border-left: 1px solid lightgray;
 }
+
+#mapcontainer {
+    padding-top: 12px;
+}
+
 .mapael .mapTooltip {
     position: absolute;
     background-color: #fff;
