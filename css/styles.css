@@ -1,0 +1,63 @@
+.jumbotron {
+    padding: 1rem 2rem;
+}
+
+.text-center, .pane h3 {
+    text-align: center;
+}
+
+#results {
+    height: 250px;
+}
+
+#simulate-button {
+    width: 89px;
+}
+
+
+.pane {
+    padding-bottom: 12px;
+    border-bottom: 1px solid lightgray;
+}
+
+.pane-left {
+    border-right: 1px solid lightgray;
+}
+
+.pane-right {
+
+    border-left: 1px solid lightgray;
+}
+.mapael .mapTooltip {
+    position: absolute;
+    background-color: #fff;
+    moz-opacity: 0.80;
+    opacity: 0.80;
+    filter: alpha(opacity=80);
+    border-radius: 4px;
+    padding: 10px;
+    z-index: 1000;
+    max-width: 200px;
+    display: none;
+    color: #232323;
+}
+
+.area {
+    fill: lightgray;
+}
+
+.no-infections {
+    fill: #FFFFFF;
+}
+
+.mild-infections {
+    fill: #FFCC99;
+}
+
+.serious-infections {
+    fill: #FF3333;
+}
+
+.very-serious-infections {
+    fill: #CC0000;
+}

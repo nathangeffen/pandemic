@@ -1,0 +1,257 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>Pandemic</title>
+        <meta name="description" content="Simulate an infectious disease">
+        <meta name="author" content="Nathan Geffen">
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+              integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+              crossorigin="anonymous">
+
+        <link rel="stylesheet" href="css/styles.css?v=1.0">
+    </head>
+
+    <body>
+
+        <div class="jumbotron text-center">
+            <h1>Model a pandemic</h1>
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+
+
+                    <div class="accordion"
+                         id="warning-not-covid-19">
+                        <div class="card">
+                            <div class="card-header text-center"
+                                 id="warning-covid">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-danger collapsed"
+                                            type="button"
+                                            data-toggle="collapse"
+                                            data-target="#collapse-covid"
+                                            aria-expanded="false"
+                                            aria-controls="collapse-covid">
+                                        Warning: Please do not infer anything
+                                        from this model about Covid-19.
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="collapse-covid"
+                                 class="collapse"
+                                 aria-labelledby="warning-covid"
+                                 data-parent="#warning-not-covid-19">
+                                <div class="card-body">
+                                    This model is for illustrative purposes
+                                    only. While the inspiration to do it came
+                                    from Covid-19, a real-world epidemic is too
+                                    complex to model using this simple Javascript program.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 pane pane-left">
+                    <h3>Parameters</h3>
+                    <button id="simulate-button" class="btn btn-primary">
+                        Simulate
+                    </button>
+                </div>
+                <div id="charts"
+                     class="col-sm-6 pane pane-right">
+                    <canvas id="chart">
+                    </canvas>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 pane pane-left">
+                    <h3>Results</h3>
+                    <p id="results" class="pre-scrollable">
+                    </p>
+                </div>
+                <div class="col-sm-6 pane pane-right">
+                    <div id="mapcontainer">
+                        <div class="map">
+                            <span>World map showing infections</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"
+        >
+        </script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"
+        >
+        </script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"
+        >
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"
+                charset="utf-8"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js" charset="utf-8"></script>
+        <script src="js/jquery.mapael.min.js"></script>
+        <script src="js/world_countries.min.js"></script>
+        <script src="js/pandemic.js"></script>
+        <script src="js/simulation.js"></script>
+        <script>
+
+
+         Pandemic.createModel({
+             name: "toy-covid-19",
+             description: "Very over-simplified attempt to model \
+             Covid-19 outbreak. Note: This model has serious limitations.",
+             executeElem: "simulate-button",
+             onExecute: (elem) => {
+                 elem.innerHTML = "Stop";
+                 elem.classList.remove("btn-primary");
+                 elem.classList.add("btn-danger");
+             },
+             onStop: (elem) => {
+                 elem.innerHTML = "Simulate";
+                 elem.classList.add("btn-primary");
+                 elem.classList.remove("btn-danger");
+             },
+             resultsElem: "results",
+             chartInfections: "chart",
+             iterations: 365,
+             iterationName: "Day",
+             defaultInfectionRates: {
+                 incidence: 0.21,
+                 lockdown: 0.01,
+                 uncontagious_contagious: 0.3,
+                 contagious_ill: 0.4,
+                 ill_cured: 0.07,
+                 ill_dead: 0.00033,
+                 default_rate: 0.0
+             },
+             regions: [
+                 {
+                     name: "china",
+                     stages: {
+                         unsusceptible: 0.0,
+                         susceptible: 1439000000.0,
+                         uncontagious: 10.0,
+                         contagious: 0.0,
+                         ill: 0.0,
+                         cured: 0.0,
+                         dead: 0.0
+                     }
+                 },
+                 {
+                     name: "india",
+                     stages: {
+                         unsusceptible: 1352000000.0,
+                         susceptible: 90000000.0,
+                         uncontagious: 0.0,
+                         contagious: 0.0,
+                         ill: 0.0,
+                         cured: 0.0,
+                         dead: 0.0
+                     }
+                 },
+                 {
+                     name: "south africa",
+                     stages: {
+                         unsusceptible: 20000000.0,
+                         susceptible: 35000000.0,
+                         uncontagious: 0.0,
+                         contagious: 0.0,
+                         ill: 0.0,
+                         cured: 0.0,
+                         dead: 0.0
+                     }
+                 }
+             ],
+             migrations:  [
+                 {
+                     "from": "china",
+                     to: "india",
+                     rate: 0.00071,
+                     symmetrical: 0.9999,
+                     illCorrection: 0.1
+                 },
+                 {
+                     "from": "south africa",
+                     to: "india",
+                     actual: 1000,
+                     symmetrical: 1.0,
+                     illCorrection: 0.1
+                 },
+                 {
+                     "from": "south africa",
+                     to: "china",
+                     actual: 2000,
+                     symmetrical: 0.9999,
+                     illCorrection: 0.1
+                 }
+             ]
+         });
+
+         var mapRegions = {
+             "CN": ["china"],
+             "ZA": ["south africa"],
+             "IN": ["india"]
+         }
+
+         $(function () {
+             $("#mapcontainer").mapael({
+                 map: {
+                     name: "world_countries"
+                 },
+                 areas: {
+                     "CN": {
+                         "cssClass": "very-serious",
+                         "value": 23843930,
+                         "tooltip": {"content": "China: 23843930"}
+                     }
+                 },
+
+             });
+         });
+
+         Simulation.createModel(
+             {
+                 name: "toy-covid-19",
+                 description: "Very over-simplified attempt to model \
+             Covid-19 outbreak. Note: This model has serious limitations.",
+                 executeElem: "simulate-button",
+                 iterations: 365,
+                 onExecute: (elem) => {
+                     elem.innerHTML = "Stop";
+                     elem.classList.remove("btn-primary");
+                     elem.classList.add("btn-danger");
+                 },
+                 onStop: (elem) => {
+                     elem.innerHTML = "Simulate";
+                     elem.classList.add("btn-primary");
+                     elem.classList.remove("btn-danger");
+                 },
+             }
+         );
+        </script>
+    </body>
+</html>
