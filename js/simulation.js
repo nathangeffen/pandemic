@@ -15,6 +15,7 @@
             this.onStop = dict["onStop"];
             this.update = dict["update"];
             this.output = dict["output"];
+            this.delay = dict["delay"] || 0;
             this.running = false;
         }
 
@@ -24,8 +25,9 @@
             this.currentIteration++;
             if (this.currentIteration < this.iterations) {
                 if (this.running === true)
-                    window.requestAnimationFrame(this.loop.bind(this));
+                    setTimeout(this.loop.bind(this), this.delay);
             } else {
+                this.running = false;
                 this.onStop(this.executeElem);
             }
         }

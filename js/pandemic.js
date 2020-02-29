@@ -77,7 +77,7 @@
 
         transition(stages) {
             this.setNewInfections(stages);
-            if (stages["ill"] > 0.0 && this.rates["lockdown"] > 0.0) {
+            if (stages["ill"] > 1.0 && this.rates["lockdown"] > 0.0) {
                 this.setStages(stages, "susceptible", "unsusceptible",
                                this.rates["lockdown"]);
             }
@@ -152,6 +152,7 @@
                     migration.illCorrection = obj["illCorrection"] || 1.0;
                     migration.rate = obj["rate"];
                     migration.actual = obj["actual"];
+                    migration.screening = obj["screening"] || 0.0;
                     if (i == 0) {
                         migration.from = obj["from"];
                         migration.to = obj["to"];
@@ -187,10 +188,16 @@
                     actual = migration.actual;
                 }
 
+                const allowedIn = 1.0 - migration.screening;
                 for (let stage of living) {
                     let delta = actual * (region_from.stages[stage] / total);
-                    if (stage === "ill") {
-                        delta *= migration.illCorrection;
+                    if (stage === "uncontagious" ||
+                        stage === "contagious" ||
+                        stage === "ill") {
+                        delta *= allowedIn;
+                        if (stage === "ill") {
+                            delta *= migration.illCorrection;
+                        }
                     }
                     region_from.stages[stage] -= delta;
                     region_to.stages[stage] += delta;
@@ -201,12 +208,11 @@
 
     pandemic.create = (dict) => {
         let parms = {
-            resultsElem: document.getElementById(dict["resultsElem"]),
             infectionTimeSeries: [],
             deathTimeSeries: [],
             iteration: 0,
             iterationName: dict["iterationName"] || "Iteration",
-            infectionRates: dict["defaultInfectionRates"],
+            infectionRates: dict["defaultStageChangeRates"],
             regions: {},
             migrations: []
         };

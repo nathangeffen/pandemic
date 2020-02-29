@@ -25,12 +25,427 @@
 
 
         <div class="container">
+
             <div class="row">
-                <div class="col-sm-12">
-
-
+                <div class="col-sm-6 col-xs-12 pane pane-left">
+                    <div class="mx-auto"
+                         style="text-align:center;">
+                        <button id="simulate-button"
+                                class="btn btn-primary">
+                            Simulate
+                        </button>
+                        <button id="reset-button"
+                                class="btn btn-primary disabled">
+                            Reset
+                        </button>
+                    </div>
                     <div class="accordion"
-                         id="warning-not-covid-19">
+                         id="parameter-form-accordian">
+
+                        <div class="card">
+                            <div class="card-header text-center"
+                                 id="explain-card">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed"
+                                            type="button"
+                                            data-toggle="collapse"
+                                            data-target="#explain"
+                                            aria-expanded="false"
+                                            aria-controls="#explain">
+                                        How this works
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="explain"
+                                 class="collapse"
+                                 aria-labelledby="explain-card"
+                                 data-parent="#parameter-form-accordian">
+                                <div class="card-body">
+                                    <p>
+                                        This is a simple mathematical simulation
+                                        (or model) of a
+                                        <a href="https://en.wikipedia.org/wiki/Pandemic">pandemic</a> or <a href="https://en.wikipedia.org/wiki/Infection">contagion</a>.</p>
+                                    <p>
+                                        Click the <em>Simulate</em> button to
+                                        start the simulation. The graph shows
+                                        the number of infections and deaths
+                                        globally. The countries on the world map
+                                        change colour to darker orange as the
+                                        number of infections in them exceeds a
+                                        percentage of the population. The
+                                        results panel provides the number of
+                                        infections and deaths per country, and
+                                        worldwide.
+                                    </p>
+
+                                    <p class="bg-warning">
+                                        Please note: The data used to set the
+                                        model's parameters should be considered
+                                        fictitious. Don't infer anything about
+                                        Covid-19 from it.
+                                    </p>
+
+                                    <h2>
+                                        Technical details of the model
+                                    </h2>
+
+                                    <p>
+                                        This is a deterministic macro, or
+                                        compartmental, model that simulates
+                                        daily changes as a pathogen spreads
+                                        throughout a region and then between
+                                        regions. It divides part of the world up
+                                        into regions (usually no more
+                                        fine-grained than by country) and has
+                                        the following <em>stages</em> (or
+                                        compartments) per region:
+                                    </p>
+                                    <dl>
+                                        <dt>
+                                            unsusceptible
+                                        </dt>
+                                        <dd>
+                                            The number of people who will not
+                                            contract the pathogen. (This increases
+                                            as the model progresses.)
+                                        </dd>
+                                        <dt>
+                                            susceptible
+                                        </dt>
+                                        <dd>
+                                            The number of people who can
+                                            contract the pathogen. (This decreases
+                                            as the model progresses.)
+                                        </dd>
+                                        <dt>
+                                            uncontagious
+                                        </dt>
+                                        <dd>
+                                            The number of infected people who
+                                            are not ill and do not transmit the
+                                            pathogen.
+                                        </dd>
+                                        <dt>
+                                            contagious
+                                        </dt>
+                                        <dd>
+                                            The number of people who are not yet
+                                            ill but can transmit the pathogen.
+                                        </dd>
+                                        <dt>
+                                            ill
+                                        </dt>
+                                        <dd>
+                                            The number of people the pathogen
+                                            has made sick. They can also
+                                            transmit the pathogen.
+                                        </dd>
+                                        <dt>
+                                            cured
+                                        </dt>
+                                        <dd>
+                                            The number of people who were once
+                                            infected who are now no longer
+                                            infected. They cannot transmit the
+                                            pathogen.
+                                        </dd>
+                                        <dt>
+                                            dead
+                                        </dt>
+                                        <dd>
+                                            The number of people who have died
+                                            from the pathogen.
+                                        </dd>
+                                    </dl>
+                                    <p>
+                                        Each region also has a set of daily
+                                        transition <em>rates</em> that determine
+                                        the changes in compartments. These are:
+                                    </p>
+                                    <dl>
+                                        <dt>
+                                            incidence
+                                        </dt>
+                                        <dd>
+                                            The rate at which contagious
+                                            infected people (i.e. people in the
+                                            contagious or ill stages) transmit
+                                            to susceptible people. This moves
+                                            people from the Susceptible
+                                            compartment to the Uncontagious one.
+                                        </dd>
+                                        <dt>
+                                            vaccinate
+                                        </dt>
+                                        <dd>
+                                            The rate at which people become
+                                            vaccinated. This moves people from
+                                            the susceptible stage to the
+                                            unsusceptible one. (Set to 0.0 in
+                                            this particular model but you can
+                                            change it.)
+                                        </dd>
+                                        <dt>
+                                            lockdown
+                                        </dt>
+                                        <dd>
+                                            This rate represents
+                                            isolation/quarantining/lockdown of
+                                            the susceptible population once
+                                            infections start in a region. This
+                                            moves people from the susceptible to
+                                            unsusceptible stages, only
+                                            once infections in the region are
+                                            greater than 1.0.
+                                        </dd>
+                                        <dt>
+                                            uncontagious_contagious
+                                        </dt>
+                                        <dd>
+                                            The rate at which uncontagious
+                                            people move to the contagious
+                                            stage.
+                                        </dd>
+                                        <dt>
+                                            contagious_ill
+                                        </dt>
+                                        <dd>
+                                            The rate at which people in the
+                                            contagious stage move to the ill
+                                            one. (Note that people in the ill
+                                            stage remain as contagious as the
+                                            people in the contagious stage.) If
+                                            people who are not ill are not
+                                            contagious in your model, set this
+                                            to 1.0 so that everyone who is
+                                            contagious is immediately made ill.
+                                        </dd>
+                                        <dt>
+                                            ill_cured
+                                        </dt>
+                                        </dd>
+                                        The rate at which people in the ill
+                                        stage become cured. Cured people are
+                                        neither susceptible to infection
+                                        again nor contagious.
+                                        </dd>
+                                        <dt>
+                                            ill_dead
+                                        </dt>
+                                        <dd>
+                                            The rate at which people who are ill
+                                            from the pathogen die.
+                                        </dd>
+                                    </dl>
+                                    <p>
+                                        The model also accounts for daily
+                                        migration between regions. A migration
+                                        route is specified with these
+                                        parameters:
+                                    </p>
+                                    <dl>
+                                        <dt>
+                                            from
+                                        </dt>
+                                        <dd>
+                                            The region from which people
+                                            are travelling.
+                                        </dd>
+                                        <dt>
+                                            to
+                                        </dt>
+                                        <dd>
+                                            The region to which people are
+                                            travelling.
+                                        </dd>
+                                        <dt>
+                                            rate
+                                        </dt>
+                                        <dd>
+                                            The proportion of the population
+                                            that migrates this way daily. (But
+                                            see <em>actual</em> which
+                                            may make more sense to use than
+                                            this.)
+                                        </dd>
+                                        <dt>
+                                            actual
+                                        </dt>
+                                        <dd>
+                                            Instead of a rate, which may be tiny
+                                            relative to the size of a region, an
+                                            absolute or actual number of people
+                                            who migrate in this direction daily
+                                            can be specified.<br/>
+                                            Specify <em>actual</em> or
+                                            <em>rate</em>, not both.
+                                        </dd>
+                                        <dt>
+                                            screening
+                                        </dt>
+                                        <dd>
+                                            This is a measure of how effective
+                                            the <em>to</em> country is at
+                                            preventing infected people from
+                                            entering it. A value of 1.0 means it
+                                            is 100% effective. 0 means it is
+                                            taking no effective measures against
+                                            allowing infected people in.
+                                        </dd>
+                                        <dt>
+                                            illCorrection
+                                        </dt>
+                                        <dd>
+                                            Ill people are presumably less
+                                            likely to travel. This is a rate
+                                            between 0.0 and 1.0 to multiply the
+                                            calculated number of ill people
+                                            scheduled to travel by. So, for
+                                            example, if it is set to 1.0, the
+                                            number of ill people who travel this
+                                            migration route is proportional to
+                                            their share of the population
+                                            travelling. But if set to 0.0, then
+                                            no ill people travel. In the default
+                                            model we've set this to 0.1,
+                                            i.e. 10% of ill people who would
+                                            have travelled, actually do so.
+                                        </dd>
+                                        <dt>
+                                            symmetrical
+                                        </dt>
+                                        <dd>
+                                            This is an optional shortcut for
+                                            specifying the migration route in
+                                            reverse (e.g. from the <em>to</em>
+                                            region back to the <em>from</em>
+                                            region). If you set this to 1.0 then
+                                            the migration route is perfectly
+                                            symmetrical between the two
+                                            regions. If less than 1.0 more
+                                            people travel from the <em>from</em>
+                                            region to the <em>to</em> region. If
+                                            greater than 1.0, more people travel
+                                            the other way. By default this is
+                                            0.0 and a separate migration entry
+                                            would need to be specified for the
+                                            reverse direction. Either set
+                                            symmetrical to a non-zero value or
+                                            create a separate entry for the
+                                            reverse direction. Don't do
+                                            both. For most models it would make
+                                            sense to set symmetrical to 1.0,
+                                            unless you happen to have good data
+                                            showing this not to be the case.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header text-center"
+                                 id="parameter-form-card">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed"
+                                            type="button"
+                                            data-toggle="collapse"
+                                            data-target="#collapse-parameters"
+                                            aria-expanded="false"
+                                            aria-controls="collapse-parameters">
+                                        Change the model parameters
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="collapse-parameters"
+                                 class="collapse"
+                                 aria-labelledby="parameter-form-card"
+                                 data-parent="#parameter-form-accordian">
+                                <div class="card-body">
+
+                                    <form id="parameter-form">
+                                        <div class="form-group">
+                                            <label for="parameter-name">
+                                                Name of this model
+                                            </label>
+                                            <input class="form-control"
+                                                   id="parameter-name">
+                                            <label for="parameter-description">
+                                                Description of this model
+                                            </label>
+                                            <textarea class="form-control"
+                                                      id="parameter-description">
+                                            </textarea>
+
+                                            <label for="parameter-iterations">
+                                                Number of days to run the model
+                                            </label>
+                                            <input class="form-control"
+                                                   id="parameter-iterations"
+                                                   type="number">
+                                            <label for="parameter-delay">
+                                                Delay in milliseconds between
+                                                days
+                                            </label>
+                                            <input class="form-control"
+                                                   id="parameter-delay"
+                                                   type="number">
+
+                                            <h3>Complex parameters</h3>
+                                            <p class="form-text text-muted">
+                                            The following more complex model
+                                            parameters are in
+                                            <a href="https://www.json.org/json-en.html">JSON</a>
+                                            format. Feel free to fiddle with
+                                            them and create a new model. The
+                                            worst that can happen is that you
+                                            have to refresh this page.
+                                        </p>
+
+
+                                        <label for="parameter-regions">
+                                            Regions
+                                        </label>
+                                        <textarea class="form-control"
+                                                  id="parameter-regions"
+                                                  rows="5">
+                                        </textarea>
+                                        <label
+                                            for="parameter-stage-change-rates">
+                                            Default stage change rates per day
+                                        </label>
+                                        <textarea
+                                            class="form-control"
+                                            id="parameter-stage-change-rates"
+                                            rows="5">
+                                        </textarea>
+                                        <label for="parameter-migrations">
+                                            Migrations
+                                        </label>
+                                        <textarea class="form-control"
+                                                  id="parameter-migrations"
+                                                  rows="5">
+                                        </textarea>
+                                        <p class="form-text text-muted">
+                                            To have more fine-grained control,
+                                            you can have multiple regions per
+                                            country. But then for the map to
+                                            continue working you need to specify
+                                            which regions are in which countries.
+                                        </p>
+                                        <label for="parameter-map-regions">
+                                            Mapping regions to countries
+                                        </label>
+                                        <textarea class="form-control"
+                                                  id="parameter-map-regions"
+                                                  rows="5">
+                                        </textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="card">
                             <div class="card-header text-center"
                                  id="warning-covid">
@@ -49,51 +464,154 @@
                             <div id="collapse-covid"
                                  class="collapse"
                                  aria-labelledby="warning-covid"
-                                 data-parent="#warning-not-covid-19">
+                                 data-parent="#parameter-form-accordian">
                                 <div class="card-body">
                                     This model is for illustrative purposes
                                     only. While the inspiration to do it came
-                                    from Covid-19, a real-world epidemic is too
-                                    complex to model using this simple Javascript program.
+                                    from Covid-19, the real-world
+                                    epidemic/pandemic has far more complexity
+                                    than this model accounts for. Here are just
+                                    a few of its inadequacies:
+
+                                    <ul>
+                                        <li>
+                                            Many of the parameters are no more
+                                            than guesses. For example, data on
+                                            country-to-country travel has not
+                                            been properly researched for the
+                                            model. Even if more accurate data
+                                            was used (e.g. based on airline
+                                            travel stats), there are so many
+                                            unknowns: How frequently do
+                                            contagious people travel? What is
+                                            the infection risk on aeroplanes?
+                                            How efficient is screening at each
+                                            airport? What about people crossing
+                                            land borders? What about
+                                            undocumented crossings? Etc.
+                                        </li>
+                                        <li>
+                                            The model does not account for
+                                            people self-isolating themselves,
+                                            which may have a big effect on
+                                            reducing its spread.
+                                        </li>
+                                        <li>
+                                            Variations of the virus may be
+                                            spreading with differing incidence
+                                            and mortality rates.
+                                        </li>
+                                        <li>
+                                            We still do not know (as of 28
+                                            February 2020) the mortality rate of
+                                            the disease because there is great
+                                            uncertainty about the real number of
+                                            infections.
+                                        </li>
+                                        <li>
+                                            We don't know the incidence rate for
+                                            several reasons, e.g. some people
+                                            who get infected only become mildly
+                                            symptomatic or remain completely
+                                            unsymptomatic.
+                                        </li>
+                                        <li>
+                                            Even if the model could be adjusted
+                                            to correctly estimate average
+                                            incidence, the virus probably
+                                            spreads in fits and starts from
+                                            cluster to cluster. For example,
+                                            maybe it will spread through a
+                                            workplace, but then "struggle" to
+                                            find new hosts.  A more accurate
+                                            model would have to be much more
+                                            fine-grained than the
+                                            country-level. Even using large
+                                            regions, e.g. the size of Wuhan,
+                                            would probably only slightly improve
+                                            the predictive power of a model.
+                                        </li>
+                                        <li>
+                                            The model does not account for how
+                                            likely the virus is to infect or
+                                            kill people of different ages (and
+                                            possibly different sexes too), or
+                                            how this might differ from country
+                                            to country.
+                                        </li>
+                                        <li>
+                                            The model does not account for
+                                            differences in health-care systems
+                                            across countries (although it could
+                                            by researching better estimates for
+                                            transitions between the stages).
+                                        </li>
+                                        <li>
+                                            The model does not account for
+                                            differences in quality of health in
+                                            populations across different regions
+                                            or countries, for example the
+                                            prevalence of diabetes (people with
+                                            diabetes are currently thought to be
+                                            at higher risk of death from
+                                            Covid-19).
+                                        </li>
+                                        <li>
+                                            The model does not account for the
+                                            extraordinary but highly variable
+                                            measures being taken in different
+                                            cities/countries across the planet
+                                            to control the virus's spread. As of
+                                            the time of writing, there is still
+                                            a reasonable possibility that
+                                            Covid-19 may be brought under
+                                            control before infecting millions of
+                                            people.
+                                        </li>
+                                        <li>
+                                            TECHNICAL: This is a
+                                            deterministic macro model. Every
+                                            time you run it with the same
+                                            parameters it gives the same
+                                            results. A stochastic
+                                            microsimulation (or agent-based)
+                                            model may or may not be more
+                                            appropriate depending on a bunch of
+                                            factors we don't properly understand
+                                            yet.
+                                        </li>
+                                    </ul>
+                                    <p>
+                                        Nevertheless, with more research and
+                                        care, a set of model parameters could be
+                                        found, without modifying the code, that
+                                        better estimates the spread of
+                                        Coronavirus. Unfortunately I don't have
+                                        the time or capacity to do that
+                                        research, but if you have found a better
+                                        set of parameters, please
+                                        <a href="mailto:nathangeffen@gmail.com">
+                                            email
+                                        </a>
+                                        them to me and I'll update the model.
+                                    </p>
+                                    <p>
+                                        Also, I suspect it may be easier to
+                                        develop a plausible model of some past
+                                        contagion, such as the 1918 flu
+                                        pandemic.
+                                    </p>
                                 </div>
+
                             </div>
                         </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-xs-12 pane pane-left">
-                    <h3>Parameters</h3>
-                    <div class="form-group">
-                        <label for="parameter-regions">Regions</label>
-                        <textarea class="form-control"
-                                  id="parameter-regions" rows="6">
-                        </textarea>
-                        <label for="parameter-migrations">Migrations</label>
-                        <textarea class="form-control"
-                                  id="parameter-migrations" rows="6">
-                        </textarea>
 
                     </div>
-
-                    <button id="simulate-button" class="btn btn-primary">
-                        Simulate
-                    </button>
                 </div>
-                <div id="charts"
-                     class="col-sm-6 col-xs-12 pane pane-right">
-                    <canvas id="chart">
-                    </canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-xs-12 pane pane-left">
-                    <h3>Results</h3>
-                    <p id="results" class="pre-scrollable">
-                    </p>
-                </div>
-                <div class="col-sm-6 col-xs-12 pane pane-right">
+                <div class="col-xs-12 col-sm-6 pane pane-right">
+                    <div id="charts">
+                        <canvas id="chart"></canvas>
+                    </div>
                     <div id="mapcontainer">
                         <div class="map">
                             <span>World map showing infections</span>
@@ -101,6 +619,26 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12 pane">
+                    <h3>Results</h3>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12 pane pane-left">
+                            <h3>World</h3>
+                            <div id="world-results" class="pre-scrollable">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12 pane pane-left">
+                            <h3>Regions</h3>
+                            <div id="region-results" class="pre-scrollable">
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+                </div>
+            </div>
+
+
         </div>
 
         <script

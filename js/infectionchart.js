@@ -4,8 +4,9 @@
 
     infectionchart.create = (dict) => {
 
+        let labels = [];
+
         const setupChartInfections = () => {
-            let labels = [];
             for (let i = 0; i < parms.iterations; i++) {
                 labels.push(i);
             }
@@ -93,8 +94,12 @@
         };
         setupChartInfections(parms);
         parms.update = () => {
+            if (labels.length < parms.infectionTimeSeries.length) {
+                labels.push(labels[labels.length - 1] + 1);
+            }
             parms.infectionChart.update(
                 {
+                    labels: labels,
                     series: [parms.infectionTimeSeries, parms.deathTimeSeries]
                 }
             );

@@ -29,16 +29,21 @@
     border-left: 1px solid lightgray;
 }
 
+#simulate-button {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
 #mapcontainer {
     padding-top: 12px;
 }
 
 .mapael .mapTooltip {
     position: absolute;
-    background-color: #fff;
-    moz-opacity: 0.80;
-    opacity: 0.80;
-    filter: alpha(opacity=80);
+    background-color: pink;
+    moz-opacity: 0.90;
+    opacity: 0.90;
+    filter: alpha(opacity=90);
     border-radius: 4px;
     padding: 10px;
     z-index: 1000;

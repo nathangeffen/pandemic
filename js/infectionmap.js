@@ -11,9 +11,9 @@
             pandemic: dict["pandemic"],
             areas: {},
             cssDivisions: dict["cssDivisions"] || [
-                [0.0001, "no-infections"],
-                [0.0003, "mild-infections"],
-                [0.0005, "serious-infections"],
+                [0.00001, "no-infections"],
+                [0.00008, "mild-infections"],
+                [0.00035, "serious-infections"],
                 [1.0, "very-serious-infections"]
             ]
         };
@@ -31,12 +31,12 @@
                     desc += ", ";
                 }
             }
-            parms.areas[key].tooltip.content = desc + " " +
+            parms.areas[key].tooltip.content = desc + ": " +
                         new Intl.NumberFormat('en-US',
                                   {
                                       style: 'decimal',
                                       maximumFractionDigits: 0
-                                  }).format(infected);
+                                  }).format(infected)  + " infected";
             parms.areas[key].value = infected;
             const prev = infected / population;
             for (let i = 0; i < parms.cssDivisions.length; i++) {
