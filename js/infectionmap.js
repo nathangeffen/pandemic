@@ -12,8 +12,8 @@
             areas: {},
             cssDivisions: dict["cssDivisions"] || [
                 [0.00001, "no-infections"],
-                [0.00008, "mild-infections"],
-                [0.00035, "serious-infections"],
+                [0.0001, "mild-infections"],
+                [0.0005, "serious-infections"],
                 [1.0, "very-serious-infections"]
             ]
         };

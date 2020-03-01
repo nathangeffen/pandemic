@@ -5,24 +5,49 @@ $(document).ready(function() {
     const iterations = 365;
     const delay = 0;
     const name = "Contagion";
-    const description = "Very simple attempt to model a worldwide pandemic";
+    const description =
+          `Very simple attempt to model a worldwide pandemic.
+Very loosely based on Covid-19 but nothing about Covid-19
+should be inferred from it. Starts off with only 10 uncontagious
+infections in Wuhan. In general 8% of populations are considered
+susceptible, which is the average annual influenza
+infection rate in the US. For countries with very weak health
+systems, this is set to 12%. Travel data are Wikipedia
+tourist pages. Only 10% of sick people who would normally
+travel do so. Most countries are assumed capable of screening
+out 90% of sick cases. Countries with very weak health
+systems are considered only capable of screening 10%, with
+the exception of Italy which is considered to have a low
+screening capacity (given how Covid-19 broke out there).
+When a country has 100 ill people, travel to and from it
+halves. Population sizes from Wikipedia except Wuhan which
+is set to 90m.`;
     const mapRegions = {
+        "AU": ["Australia",],
+        "BR": ["Brazil",],
         "CN": ["China Wuhan", "China (rest)"],
-        "ZA": ["South Africa"],
+        "DE": ["Germany",],
+        "ES": ["Spain",],
+        "FR": ["France",],
+        "GB": ["United Kingdom",],
         "IN": ["India"],
-        "KR": ["South Korea"],
-        "JP": ["Japan",],
-        "IT": ["Italy",],
-        "US": ["United States",],
         "IR": ["Iran",],
+        "IT": ["Italy Milan", "Italy (rest)", ],
+        "JP": ["Japan",],
+        "KR": ["South Korea"],
+        "MY": ["Malaysia"],
         "NG": ["Nigeria",],
+        "SG": ["Singapore",],
         "TH": ["Thailand",],
+        "US": ["United States",],
+        "VN": ["Vietnam",],
+        "ZA": ["South Africa"],
     };
 
     const  defaultStageChangeRates =  {
         incidence: 0.18,
         vaccinate: 0.0,
-        lockdown: 0.02,
+        lockdown: 0.00, // For the default model we don't use this.
         uncontagious_contagious: 0.3,
         contagious_ill: 0.4,
         ill_cured: 0.07,
@@ -43,6 +68,18 @@ $(document).ready(function() {
         return j;
     }
 
+    /* Susceptible population rates, based on CDC flu
+       https://www.cdc.gov/flu/about/keyfacts.htm
+    */
+    const lowSusceptibility = 0.08;
+    /* For countries with weak health systems */
+    const highSusceptibility = 0.12;
+
+    /* Percentage of infections that will be blocked at ports
+       of a country. This is just a guess. */
+    const strongScreen = 0.9;
+    const weakScreen = 0.1;
+
     let worldResults = document.getElementById("world-results");
     let regionResults = document.getElementById("region-results");
 
@@ -52,178 +89,292 @@ $(document).ready(function() {
 
     let regions = [
         {
+            name: "Australia",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 25203198.0,
+                susceptible: lowSusceptibility * 25203198.0,
+            }
+        },
+        {
+            name: "Brazil",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 211049527.0,
+                susceptible: lowSusceptibility * 211049527.0,
+            }
+        },
+        {
             name: "China Wuhan",
             stages: {
-                susceptible: 90000000.0,
+                unsusceptible: (1 - lowSusceptibility) * 90000000,
+                susceptible: lowSusceptibility * 90000000.0,
                 uncontagious: 10.0,
             }
         },
         {
             name: "China (rest)",
             stages: {
-                susceptible: 1337647786.0,
+                unsusceptible: (1 - lowSusceptibility) * 1337647786.0,
+                susceptible: lowSusceptibility * 1337647786.0,
+            }
+        },
+        {
+            name: "France",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 65129728.0,
+                susceptible: lowSusceptibility * 65129728.0
+            }
+        },
+        {
+            name: "Germany",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 83517045.0,
+                susceptible: lowSusceptibility * 83517045.0
             }
         },
         {
             name: "India",
             stages: {
-                susceptible: 1352642280.0,
+                unsusceptible: (1 - highSusceptibility) * 1352642280.0,
+                susceptible: highSusceptibility * 1352642280.0
             }
         },
         {
             name: "Iran",
             stages: {
-                susceptible: 81800188.0,
+                unsusceptible: (1 - highSusceptibility)  * 81800188.0,
+                susceptible: highSusceptibility * 81800188.0,
             },
-            infectionRates: {
-                lockdown: 0.01
+        },
+        {
+            name: "Italy Milan",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 3259835.0,
+                susceptible: lowSusceptibility * 3259835.0,
             }
         },
         {
-            name: "Italy",
+            name: "Italy (rest)",
             stages: {
-                susceptible: 60627291.0,
+                unsusceptible: (1 - lowSusceptibility) * (60627291.0-3259835.0),
+                susceptible: lowSusceptibility * (60627291.0-3259835.0),
+            }
+        },
+        {
+            name: "Malaysia",
+            stages: {
+                unsusceptible: (1 - highSusceptibility) * 31949777.0,
+                susceptible: highSusceptibility * 31949777.0
             }
         },
         {
             name: "Nigeria",
             stages: {
-                susceptible: 195874683.0,
-            },
-            infectionRates: {
-                lockdown: 0.01
+                unsusceptible: (1 - highSusceptibility) * 195874683.0,
+                susceptible: highSusceptibility * 195874683.0
             }
         },
         {
             name: "Japan",
             stages: {
-                susceptible: 127202192.0
+                unsusceptible: (1 - lowSusceptibility) * 127202192.0,
+                susceptible: lowSusceptibility * lowSusceptibility
+            }
+        },
+        {
+            name: "Singapore",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 5804337.0,
+                susceptible: lowSusceptibility * 5804337.0,
             }
         },
         {
             name: "South Africa",
             stages: {
-                susceptible: 57792518.0,
+                unsusceptible: (1 - highSusceptibility) * 57792518.0,
+                susceptible: highSusceptibility * 57792518.0,
             }
         },
         {
             name: "South Korea",
             stages: {
-                susceptible: 51171706.0,
+                unsusceptible:  (1 - lowSusceptibility) * 51171706.0,
+                susceptible: lowSusceptibility * 51171706.0
+            }
+        },
+        {
+            name: "Spain",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 46736776.0,
+                susceptible: lowSusceptibility * 46736776.0,
             }
         },
         {
             name: "Thailand",
             stages: {
-                susceptible: 68863514.0,
+                unsusceptible: (1 - lowSusceptibility) * 68863514.0,
+                susceptible: lowSusceptibility * 68863514.0,
+            }
+        },
+        {
+            name: "United Kingdom",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 67530172.0,
+                susceptible: lowSusceptibility * 67530172.0
             }
         },
         {
             name: "United States",
             stages: {
-                susceptible: 327096265.0,
+                unsusceptible: (1 - lowSusceptibility) * 327096265.0,
+                susceptible: lowSusceptibility * 327096265.0
             }
         },
-
+        {
+            name: "Vietnam",
+            stages: {
+                unsusceptible: (1 - lowSusceptibility) * 96462106.0,
+                susceptible: lowSusceptibility * 96462106.0
+            }
+        },
     ];
+
+    let defaultMigration = {
+        illCorrection: 0.1,
+        screening: strongScreen,
+        toDetected: 100,
+        fromDetected: 100,
+        reducedFromTravel: 0.5,
+        reducedToTravel: 0.5,
+        symmetrical: 1.0
+    };
 
     let migrations = [
         {
+            "from": "Australia",
+            to: "Singapore",
+            actual: (1107215.0 + 407000.0) / 365.0,
+        },
+        {
+            "from": "Australia",
+            to: "China (rest)",
+            actual: 1323000.0 / 365.0,
+        },
+        {
+            "from": "Brazil",
+            to: "United States",
+            actual: (570350.0 + 2209372) / 365.0,
+        },
+        {
             "from": "China Wuhan",
             to: "China (rest)",
-            actual: 10000.0,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.01
+            actual: 10000.0, // This is a completely ignorant guess
+            screening: weakScreen
         },
         {
             "from": "China (rest)",
             to: "India",
-            actual: 1000.0,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.5
-        },
-        {
-            "from": "South Africa",
-            to: "India",
-            actual: 200,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.5
-        },
-        {
-            "from": "South Africa",
-            to: "China (rest)",
-            actual: 410,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.8
-        },
-        {
-            "from": "China (rest)",
-            to: "South Korea",
-            actual: 16400,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.5
-        },
-        {
-            "from": "China (rest)",
-            to: "Japan",
-            actual: 22000,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.5
-        },
-        {
-            "from": "Japan",
-            to: "South Korea",
-            actual: 10500,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.5
-        },
-        {
-            "from": "China (rest)",
-            to: "Italy",
-            actual: 8700,
-            symmetrical: 1.0,
-            illCorrection: 0,
-            screening: 0.0
-        },
-        {
-            "from": "China (rest)",
-            to: "United States",
-            actual: 15000,
-            symmetrical: 1.0,
-            illCorrection: 0.01,
-            screening: 0.95
+            actual: (281768.0 / 365.0),
         },
         {
             "from": "China (rest)",
             to: "Iran",
-            actual: 1000,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.1
+            actual: 50000.0/365.0,
+            screening: weakScreen
+        },
+        {
+            // I couldn't find any reliable info on Italian tourists to China
+            // So this is just Chinese tourists to Italy, which is very large
+            "from": "China (rest)",
+            to: "Italy Milan",
+            actual: (3259835.0/60627291.0) *  (3200847.0 / 365.0),
+            screening: weakScreen,
+        },
+        {
+            "from": "China (rest)",
+            to: "Italy (rest)",
+            actual: ((60627291.0-3259835.0)/60627291.0) *  (3200847.0/365.0),
+            screening: weakScreen,
         },
         {
             "from": "China (rest)",
             to: "Nigeria",
-            actual: 100,
-            symmetrical: 1.0,
-            illCorrection: 0.1,
-            screening: 0.1
+            // https://www.premiumtimesng.com/news/more-news/229234-nigeria-records-highest-chinese-outbound-visitors-africa.html
+            actual: 200000.0 / 365.0,
+            screening: weakScreen,
+        },
+        {
+            "from": "China (rest)",
+            to: "Japan",
+            actual: (2590700+8380034)/365.0,
+        },
+        {
+            "from": "China (rest)",
+            to: "Singapore",
+            actual: 3416475 / 365.0,
+        },
+        {
+            "from": "China (rest)",
+            to: "South Africa",
+            actual: 84691 / 365.0,
+        },
+        {
+            "from": "China (rest)",
+            to: "South Korea",
+            actual:  (4775000.0 + 4775000) / 365.0,
         },
         {
             "from": "China (rest)",
             to: "Thailand",
-            actual: 30000,
+            actual: 10994721.0/365.0,
             symmetrical: 1.0,
             illCorrection: 0.1,
-            screening: 0.8
-        }
+            screening: 0.5
+        },
+        {
+            "from": "China (rest)",
+            to: "United States",
+            actual: (2991813.0 + 2250000.0) / 365.0,
+        },
+        {
+            "from": "China (rest)",
+            to: "Malaysia",
+            actual: 1791423.0 / 365.0,
+        },
+        {
+            "from": "China (rest)",
+            to: "Vietnam",
+            actual: 5806425.0 / 365.0,
+        },
+        {
+            "from": "Italy (rest)",
+            to: "France",
+            actual: 4737464.0 / 365.0,
+        },
+        {
+            "from": "Italy (rest)",
+            to: "Germany",
+            actual: (12184502.0 + 1651933.0) / 365.0,
+        },
+        {
+            "from": "Italy (rest)",
+            to: "Spain",
+            actual: (2175267.0 + 4382503.0) / 365.0,
+        },
+        {
+            "from": "Italy (rest)",
+            to: "United Kingdom",
+            actual: 3781882.0 / 365.0,
+        },
+        {
+            "from": "Italy (rest)",
+            to: "Brazil",
+            actual: 181493.0 / 365.0,
+        },
+        {
+            "from": "Malaysia",
+            to: "Singapore",
+            actual: (13178774.0 + 1253992.0) / 365.0,
+        },
     ];
 
 
@@ -235,6 +386,8 @@ $(document).ready(function() {
         JSON.stringify(regions, null, 4);
     document.getElementById("parameter-migrations").value =
         JSON.stringify(migrations, null, 4);
+    document.getElementById("parameter-default-migration").value =
+        JSON.stringify(defaultMigration, null, 4);
     document.getElementById("parameter-stage-change-rates").value =
         JSON.stringify(defaultStageChangeRates, null, 4);
     document.getElementById("parameter-map-regions").value =
@@ -304,6 +457,7 @@ $(document).ready(function() {
         pandemic = Pandemic.create({
             iterationName: "Day",
             defaultStageChangeRates: parse("stage-change-rates"),
+            defaultMigration: parse("default-migration"),
             regions: parse("regions"),
             migrations: parse("migrations")
         });

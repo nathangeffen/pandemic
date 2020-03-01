@@ -141,22 +141,54 @@
 
     class Migrations {
 
-        constructor(arr) {
+        constructor(regions, arr, defaultMigration) {
+            if (defaultMigration === undefined) {
+                defaultMigration = {};
+                defaultMigration["illCorrection"] = 0.0;
+                defaultMigration["rate"] = undefined;
+                defaultMigration["actual"] = undefined;
+                defaultMigration["screening"] = 0.0;
+                defaultMigration["toDetected"] = 0.0;
+                defaultMigration["fromDetected"] = 0.0;
+                defaultMigration["reducedToTravel"] = 1.0;
+                defaultMigration["reducedFromTravel"] = 1.0;
+                defaultMigration["symmetrical"] = 0.0;
+            }
             this.migrations = [];
             for (let obj of arr) {
                 let n = 1;
-                let symmetrical = obj["symmetrical"] | 0.0;
+                let symmetrical = obj["symmetrical"] |
+                    defaultMigration["symmetrical"];
                 if (symmetrical > 0.0) n = 2;
                 for (let i = 0; i < n; i++) {
                     let migration = {};
-                    migration.illCorrection = obj["illCorrection"] || 1.0;
-                    migration.rate = obj["rate"];
-                    migration.actual = obj["actual"];
-                    migration.screening = obj["screening"] || 0.0;
+                    migration.illCorrection = obj["illCorrection"] ||
+                        defaultMigration["illCorrection"];
+                    migration.rate = obj["rate"] || defaultMigration["rate"];
+                    migration.actual = obj["actual"] ||
+                        defaultMigration["actual"];
+                    migration.screening = obj["screening"] ||
+                        defaultMigration["screening"];
+                    migration.toDetected = obj["toDetected"] ||
+                        defaultMigration["toDetected"];
+                    migration.fromDetected = obj["fromDetected"] ||
+                        defaultMigration["fromDetected"];
+                    migration.reducedToTravel = obj["reducedToTravel"] ||
+                        defaultMigration["reducedToTravel"];
+                    migration.reducedFromTravel = obj["reducedFromTravel"] ||
+                        defaultMigration["reducedFromTravel"];
+
+                    if (! (obj["from"] in regions) ) {
+                        throw("Unknown region in migration " + obj["from"]);
+                    }
+
+                    if (! (obj["to"] in regions) ) {
+                        throw("Unknown region in migration " + obj["to"]);
+                    }
+
                     if (i == 0) {
                         migration.from = obj["from"];
                         migration.to = obj["to"];
-
                     } else {
                         migration.from = obj["to"];
                         migration.to = obj["from"];
@@ -174,12 +206,12 @@
 
         update(regions) {
             for (let migration of this.migrations) {
-                let region_from = regions[migration.from];
-                let region_to = regions[migration.to];
+                let regionFrom = regions[migration.from];
+                let regionTo = regions[migration.to];
                 let actual = 0.0;
                 let total = 0.0;
                 for (let stage of living) {
-                    total += region_from.stages[stage];
+                    total += regionFrom.stages[stage];
                 }
 
                 if (migration.actual === undefined) {
@@ -188,9 +220,20 @@
                     actual = migration.actual;
                 }
 
+                if (regionTo.stages["ill"] > migration.toDetected &&
+                    regionFrom.stages["ill"] > migration.fromDetected) {
+                    const reducedTravel = Math.max(migration.reducedToTravel,
+                                                   migration.reducedFromTravel);
+                    actual *= reducedTravel;
+                } else if (regionTo.stages["ill"] > migration.toDetected) {
+                    actual *= migration.reducedToTravel;
+                } else if (regionFrom.stages["ill"] > migration.fromDetected) {
+                    actual *= migration.reducedFromTravel;
+                }
+
                 const allowedIn = 1.0 - migration.screening;
                 for (let stage of living) {
-                    let delta = actual * (region_from.stages[stage] / total);
+                    let delta = actual * (regionFrom.stages[stage] / total);
                     if (stage === "uncontagious" ||
                         stage === "contagious" ||
                         stage === "ill") {
@@ -199,8 +242,8 @@
                             delta *= migration.illCorrection;
                         }
                     }
-                    region_from.stages[stage] -= delta;
-                    region_to.stages[stage] += delta;
+                    regionFrom.stages[stage] -= delta;
+                    regionTo.stages[stage] += delta;
                 }
             }
         }
@@ -213,6 +256,7 @@
             iteration: 0,
             iterationName: dict["iterationName"] || "Iteration",
             infectionRates: dict["defaultStageChangeRates"],
+            defaultMigration: dict["defaultMigration"],
             regions: {},
             migrations: []
         };
@@ -244,8 +288,9 @@
             }
         }
 
-        parms.addMigrations = (arr) => {
-            parms.migrations = new Migrations(arr);
+        parms.addMigrations = (arr, defaultMigration) => {
+            parms.migrations = new Migrations(parms.regions, arr,
+                                              parms.defaultMigration);
         }
 
         parms.countInfected = () => {
@@ -298,7 +343,7 @@
         }
 
         if ("migrations" in dict) {
-            parms.addMigrations(dict["migrations"]);
+            parms.addMigrations(dict["migrations"], dict["defaultMigrations"]);
         }
 
         return parms;

@@ -337,6 +337,25 @@
                                             sense to set symmetrical to 1.0,
                                             unless you happen to have good data
                                             showing this not to be the case.
+                                        </dd>
+                                        <dt>
+                                            fromDetected, reducedFromTravel,
+                                            toDetected, reducedToTravel
+                                        </dt>
+                                        <dd>
+                                            Once a country is known to have an
+                                            epidemic travel to and from it will
+                                            likely decrease.
+                                            <em>fromDetected</em> specifies the
+                                            number of ill people in the
+                                            <em>from</em> region there must be
+                                            for this travel decrease to kick
+                                            in. The decreased rate of travel is
+                                            <em>reducedFromTravel</em>. The
+                                            <em>toDetected</em> and
+                                            <em>reducedToTravel</em> are the
+                                            corresponding parameters for the
+                                            <em>to</em> area.
                                         </li>
                                     </ul>
                                 </div>
@@ -425,6 +444,15 @@
                                         <textarea class="form-control"
                                                   id="parameter-migrations"
                                                   rows="5">
+                                        </textarea>
+                                        <label
+                                            for="parameter-default-migration">
+                                            Default migration
+                                        </label>
+                                        <textarea
+                                            class="form-control"
+                                            id="parameter-default-migration"
+                                            rows="5">
                                         </textarea>
                                         <p class="form-text text-muted">
                                             To have more fine-grained control,
