@@ -9,7 +9,7 @@
 
         constructor(rates) {
             this.rates = {
-                incidence: 0.0,
+                beta: 0.0,
                 vaccinate: 0.0,
                 lockdown: 0.0,
                 uncontagious_contagious: 0.0,
@@ -51,11 +51,11 @@
         }
 
         setNewInfections(stages) {
-            let incidence = this.rates["incidence"];
+            let beta = this.rates["beta"];
             let X = stages["susceptible"];
             let Y = this.countInfected(stages) - stages["uncontagious"];
             let N = X + Y;
-            let delta = X * incidence * ( Y / N );
+            let delta = X * beta * ( Y / N );
             stages["susceptible"] -= delta;
             stages["uncontagious"] += delta;
         }
@@ -71,6 +71,9 @@
             let stage_key = stage_from + "_" + stage_to;
             if (stage_key in this.rates) {
                 rate = this.rates[stage_key];
+            } else {
+                console.log("Unknown transition rate: ", stage_key);
+                throw("Unknown transition rate");
             }
             this.setStages(stages, stage_from, stage_to, rate);
         }
@@ -95,7 +98,7 @@
 
     class Region {
 
-        constructor(stages, infectionRates) {
+        constructor(stages, transitionRates) {
             this.stages = {
                 unsusceptible: 0,
                 susceptible: 0,
@@ -108,7 +111,7 @@
             if (stages !== undefined) {
                 this.setStages(stages);
             }
-            this.infection = new Infection(infectionRates);
+            this.infection = new Infection(transitionRates);
         }
 
         setStage(key, value) {
@@ -255,7 +258,7 @@
             deathTimeSeries: [],
             iteration: 0,
             iterationName: dict["iterationName"] || "Iteration",
-            infectionRates: dict["defaultStageChangeRates"],
+            transitionRates: dict["transitionRates"],
             defaultMigration: dict["defaultMigration"],
             regions: {},
             migrations: []
@@ -264,20 +267,20 @@
         parms.addRegion = (dict) => {
             const name = dict["name"];
             const stages = dict["stages"];
-            let infectionRates = dict["infectionRates"];
-            if (parms.infectionRates !== undefined) {
-                if (infectionRates === undefined) {
-                    infectionRates = parms.infectionRates;
+            let transitionRates = dict["transitionRates"];
+            if (parms.transitionRates !== undefined) {
+                if (transitionRates === undefined) {
+                    transitionRates = parms.transitionRates;
                 } else {
                     for (let [key, value] of
-                         Object.entries(parms.infectionRates)) {
-                        if (! (key in infectionRates) ) {
-                            infectionRates[key] = value;
+                         Object.entries(parms.transitionRates)) {
+                        if (! (key in transitionRates) ) {
+                            transitionRates[key] = value;
                         }
                     }
                 }
             }
-            const region = new Region(stages, infectionRates);
+            const region = new Region(stages, transitionRates);
             parms.regions[name] = region;
             return region;
         }

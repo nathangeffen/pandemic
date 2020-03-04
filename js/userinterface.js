@@ -8,20 +8,7 @@ $(document).ready(function() {
     const description =
           `Very simple attempt to model a worldwide pandemic.
 Very loosely based on Covid-19 but nothing about Covid-19
-should be inferred from it. Starts off with only 10 uncontagious
-infections in Wuhan. In general 8% of populations are considered
-susceptible, which is the average annual influenza
-infection rate in the US. For countries with very weak health
-systems, this is set to 12%. Travel data are Wikipedia
-tourist pages. Only 10% of sick people who would normally
-travel do so. Most countries are assumed capable of screening
-out 90% of sick cases. Countries with very weak health
-systems are considered only capable of screening 10%, with
-the exception of Italy which is considered to have a low
-screening capacity (given how Covid-19 broke out there).
-When a country has 100 ill people, travel to and from it
-halves. Population sizes from Wikipedia except Wuhan which
-is set to 90m.`;
+should be inferred from it.`;
     const mapRegions = {
         "AU": ["Australia",],
         "BR": ["Brazil",],
@@ -44,8 +31,17 @@ is set to 90m.`;
         "ZA": ["South Africa"],
     };
 
-    const  defaultStageChangeRates =  {
-        incidence: 0.18,
+    const mapColors = [
+        [0.00001, "no-infections"],
+        [0.00001 * 5, "low-infection-rate"],
+        [0.00001 * 25, "moderate-infection-rate"],
+        [0.00001 * 25 * 5, "serious-infection-rate"],
+        [0.00001 * 25 * 25, "very-serious-infection-rate"],
+        [1.0, "extremely-serious-infection-rate"]
+    ]
+
+    const  defaultTransitionRates =  {
+        beta: 0.18,
         vaccinate: 0.0,
         lockdown: 0.00, // For the default model we don't use this.
         uncontagious_contagious: 0.3,
@@ -388,10 +384,12 @@ is set to 90m.`;
         JSON.stringify(migrations, null, 4);
     document.getElementById("parameter-default-migration").value =
         JSON.stringify(defaultMigration, null, 4);
-    document.getElementById("parameter-stage-change-rates").value =
-        JSON.stringify(defaultStageChangeRates, null, 4);
+    document.getElementById("parameter-transition-rates").value =
+        JSON.stringify(defaultTransitionRates, null, 4);
     document.getElementById("parameter-map-regions").value =
         JSON.stringify(mapRegions, null, 4);
+    document.getElementById("parameter-map-colors").value =
+        JSON.stringify(mapColors, null, 4);
 
     let initUserInterface = () => {
 
@@ -456,7 +454,7 @@ is set to 90m.`;
 
         pandemic = Pandemic.create({
             iterationName: "Day",
-            defaultStageChangeRates: parse("stage-change-rates"),
+            transitionRates: parse("transition-rates"),
             defaultMigration: parse("default-migration"),
             regions: parse("regions"),
             migrations: parse("migrations")
@@ -476,9 +474,30 @@ is set to 90m.`;
             container: "mapcontainer",
             name: "world_countries",
             regions: parse("map-regions"),
-            pandemic: pandemic
+            pandemic: pandemic,
+            mapColors: parse("map-colors")
         });
 
+        const ratePer100k = (n) => {
+            return n * 100000;
+        }
+
+        const setLegend = (desc, from, to) => {
+            if (to !== undefined) {
+                document.getElementById(desc).innerHTML =
+                    ratePer100k(mapColors[from][0]) + " - " +
+                    ratePer100k(mapColors[to][0]) + " infections per 100k people";
+            } else {
+                document.getElementById(desc).innerHTML =
+                    " > " + ratePer100k(mapColors[from][0]) + " infections per 100k people";
+            }
+        }
+
+        setLegend("low", 0, 1);
+        setLegend("moderate", 1, 2);
+        setLegend("serious", 2, 3);
+        setLegend("very-serious", 3, 4);
+        setLegend("extremely-serious", 4);
 
         simulation = Simulation.create({
             name: document.getElementById("parameter-name").value,

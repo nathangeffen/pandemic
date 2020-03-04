@@ -10,12 +10,7 @@
             regions: dict["regions"],
             pandemic: dict["pandemic"],
             areas: {},
-            cssDivisions: dict["cssDivisions"] || [
-                [0.00001, "no-infections"],
-                [0.0001, "mild-infections"],
-                [0.0005, "serious-infections"],
-                [1.0, "very-serious-infections"]
-            ]
+            mapColors: dict["mapColors"] || {}
         };
 
         const setArea = (key, value) => {
@@ -39,9 +34,9 @@
                                   }).format(infected)  + " infected";
             parms.areas[key].value = infected;
             const prev = infected / population;
-            for (let i = 0; i < parms.cssDivisions.length; i++) {
-                if (prev <= parms.cssDivisions[i][0]) {
-                    parms.areas[key].cssClass = parms.cssDivisions[i][1];
+            for (let i = 0; i < parms.mapColors.length; i++) {
+                if (prev <= parms.mapColors[i][0]) {
+                    parms.areas[key].cssClass = parms.mapColors[i][1];
                     break;
                 }
             }

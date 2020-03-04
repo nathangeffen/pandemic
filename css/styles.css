@@ -1,3 +1,12 @@
+h2, h3, h4, h5 {
+    margin-top: .5rem;
+}
+
+label {
+    margin-top: .5rem;
+    margin-bottom: .3rem;
+}
+
 .jumbotron {
     padding: 1rem 2rem;
 }
@@ -34,6 +43,12 @@
     margin-bottom: 12px;
 }
 
+#results-heading {
+    /* text-decoration: underline lightgray;*/
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
 #mapcontainer {
     padding-top: 12px;
 }
@@ -57,17 +72,29 @@
 }
 
 .no-infections {
-    fill: #FFFFFF;
+    fill: white;
 }
 
-.mild-infections {
-    fill: #FFCC99;
+.low-infection-rate {
+    fill: lightyellow;
 }
 
-.serious-infections {
-    fill: #FF3333;
+.moderate-infection-rate {
+    fill: #ffe6e6;
 }
 
-.very-serious-infections {
-    fill: #CC0000;
+.serious-infection-rate {
+    fill: #ff8080;
+}
+
+.very-serious-infection-rate {
+    fill: red;
+}
+
+.extremely-serious-infection-rate {
+    fill: darkred;
+}
+
+.legend-text {
+    font-size: 10px;
 }

@@ -64,7 +64,9 @@
                                     <p>
                                         This is a simple mathematical simulation
                                         (or model) of a
-                                        <a href="https://en.wikipedia.org/wiki/Pandemic">pandemic</a> or <a href="https://en.wikipedia.org/wiki/Infection">contagion</a>.</p>
+                                        <a href="https://en.wikipedia.org/wiki/Pandemic">pandemic</a> or
+                                        <a href="https://en.wikipedia.org/wiki/Infection">contagion</a>.
+                                    </p>
                                     <p>
                                         Click the <em>Simulate</em> button to
                                         start the simulation. The graph shows
@@ -100,13 +102,66 @@
                                         the following <em>stages</em> (or
                                         compartments) per region:
                                     </p>
+                                    <p>
+                                        This model is very loosely based on
+                                        Covid-19 but nothing about Covid-19
+                                        should be inferred from it.
+                                    </p>
+                                    <h3>Assumptions and data sources</h3>
+                                    <p> It starts off with only 10 uncontagious
+                                        infections in Wuhan. In general 8% of
+                                        country populations are considered
+                                        susceptible, which is the average annual
+                                        influenza infection rate in the US. For
+                                        countries with very weak health systems,
+                                        this is set to 12%.
+                                    </p>
+                                    <p> Travel data are from Wikipedia tourist
+                                        pages. It assumes only 10% of sick
+                                        people who would normally travel do
+                                        so. Most countries are assumed capable
+                                        of screening out 90% of sick
+                                        cases. Countries with very weak health
+                                        systems are considered only capable of
+                                        screening 10%, with the exception of
+                                        Italy which is considered to have a low
+                                        screening capacity (given how Covid-19
+                                        broke out there). When a country has 100
+                                        ill people, travel to and from it
+                                        halves. Population sizes are from
+                                        Wikipedia except Wuhan which is set to
+                                        90m.
+                                    </p>
+                                    <p>
+                                        The transition rates between stages
+                                        (compartments) have been set
+                                        experimentally. (See the <em>Change the
+                                        model parameters</em> section.)
+                                    </p>
+                                    <p>
+                                        You will notice that a lot of the above
+                                        is very presumptious indeed. And if you
+                                        look at the data in the form below, you
+                                        will notice that a lot of
+                                    </p>
+                                    <p>
+                                        In short, nearly every aspect of this
+                                        model could be improved to be more
+                                        realistic.
+                                    </p>
+                                    <h3>Parameters</h3>
+                                    <h4>Regions</h4>
                                     <dl>
                                         <dt>
                                             unsusceptible
                                         </dt>
                                         <dd>
                                             The number of people who will not
-                                            contract the pathogen. (This increases
+                                            contract the pathogen. (If
+                                            <em>lockdown</em>
+                                            is set &ndash which it isn't in the
+                                            default model &ndash then the
+                                            unsusceptible population increases
                                             as the model progresses.)
                                         </dd>
                                         <dt>
@@ -114,8 +169,12 @@
                                         </dt>
                                         <dd>
                                             The number of people who can
-                                            contract the pathogen. (This decreases
-                                            as the model progresses.)
+                                            contract the pathogen. (If
+                                            <em>lockdown</em>
+                                            is set &ndash which it isn't in the
+                                            default model &ndash then the
+                                            susceptible population decreases as
+                                            the model progresses.)
                                         </dd>
                                         <dt>
                                             uncontagious
@@ -158,21 +217,37 @@
                                         </dd>
                                     </dl>
                                     <p>
+                                        If any of the above are not specified
+                                        they default to 0.
+                                    </p>
+                                    <h4>Transition rates</h4>
+                                    <p>
                                         Each region also has a set of daily
                                         transition <em>rates</em> that determine
-                                        the changes in compartments. These are:
+                                        the changes in stages (or
+                                        compartments). These are:
                                     </p>
                                     <dl>
                                         <dt>
-                                            incidence
+                                            beta
                                         </dt>
                                         <dd>
                                             The rate at which contagious
                                             infected people (i.e. people in the
                                             contagious or ill stages) transmit
                                             to susceptible people. This moves
-                                            people from the Susceptible
-                                            compartment to the Uncontagious one.
+                                            people from the <em>susceptible</em>
+                                            compartment to the
+                                            <em>uncontagious</em>
+                                            one.
+                                            The equations for this are:<br />
+                                            delta = X * beta * (Y / (X + Y))<br/>
+                                            X -= delta<br />
+                                            Y -= delta<br />
+                                            Where:<br />
+                                            X = susceptible population<br />
+                                            Y = infected population less
+                                            uncontagious infected population
                                         </dd>
                                         <dt>
                                             vaccinate
@@ -224,10 +299,10 @@
                                             ill_cured
                                         </dt>
                                         <dd>
-                                        The rate at which people in the ill
-                                        stage become cured. Cured people are
-                                        neither susceptible to infection
-                                        again nor contagious.
+                                            The rate at which people in the ill
+                                            stage become cured. Cured people are
+                                            neither susceptible to infection
+                                            again nor contagious.
                                         </dd>
                                         <dt>
                                             ill_dead
@@ -237,6 +312,13 @@
                                             from the pathogen die.
                                         </dd>
                                     </dl>
+                                    <p>The above are specified per region, but
+                                        a default set of transition rates
+                                        can also be specified so that you
+                                        don't have to fill in every transition
+                                        rate for every region.
+                                    </p>
+                                    <h4>Migrations</h4>
                                     <p>
                                         The model also accounts for daily
                                         migration between regions. A migration
@@ -358,6 +440,10 @@
                                             <em>to</em> area.
                                         </dd>
                                     </dl>
+                                    <p>
+                                        Default values for the above can also be
+                                        specified.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -412,62 +498,75 @@
 
                                             <h3>Complex parameters</h3>
                                             <p class="form-text text-muted">
-                                            The following more complex model
-                                            parameters are in
-                                            <a href="https://www.json.org/json-en.html">JSON</a>
-                                            format. Feel free to fiddle with
-                                            them and create a new model. The
-                                            worst that can happen is that you
-                                            have to refresh this page.
-                                        </p>
+                                                The following more complex model
+                                                parameters are in
+                                                <a href="https://www.json.org/json-en.html">JSON</a>
+                                                format. Feel free to fiddle with
+                                                them and create a new model. The
+                                                worst that can happen is that you
+                                                have to refresh this page.
+                                            </p>
 
 
-                                        <label for="parameter-regions">
-                                            Regions
-                                        </label>
-                                        <textarea class="form-control"
-                                                  id="parameter-regions"
-                                                  rows="5">
-                                        </textarea>
-                                        <label
-                                            for="parameter-stage-change-rates">
-                                            Default stage change rates per day
-                                        </label>
-                                        <textarea
-                                            class="form-control"
-                                            id="parameter-stage-change-rates"
-                                            rows="5">
-                                        </textarea>
-                                        <label for="parameter-migrations">
-                                            Migrations
-                                        </label>
-                                        <textarea class="form-control"
-                                                  id="parameter-migrations"
-                                                  rows="5">
-                                        </textarea>
-                                        <label
-                                            for="parameter-default-migration">
-                                            Default migration
-                                        </label>
-                                        <textarea
-                                            class="form-control"
-                                            id="parameter-default-migration"
-                                            rows="5">
-                                        </textarea>
-                                        <p class="form-text text-muted">
-                                            To have more fine-grained control,
-                                            you can have multiple regions per
-                                            country. But then for the map to
-                                            continue working you need to specify
-                                            which regions are in which countries.
-                                        </p>
-                                        <label for="parameter-map-regions">
-                                            Mapping regions to countries
-                                        </label>
-                                        <textarea class="form-control"
-                                                  id="parameter-map-regions"
-                                                  rows="5">
-                                        </textarea>
+                                            <label for="parameter-regions">
+                                                Regions
+                                            </label>
+                                            <textarea class="form-control"
+                                                      id="parameter-regions"
+                                                      rows="5">
+                                            </textarea>
+                                            <label
+                                                for="parameter-transition-rates">
+                                                Default transition rates per day
+                                                between stages
+                                            </label>
+                                            <textarea
+                                                class="form-control"
+                                                id="parameter-transition-rates"
+                                                rows="5">
+                                            </textarea>
+                                            <label for="parameter-migrations">
+                                                Migrations
+                                            </label>
+                                            <textarea class="form-control"
+                                                      id="parameter-migrations"
+                                                      rows="5">
+                                            </textarea>
+                                            <label
+                                                for="parameter-default-migration">
+                                                Default migration
+                                            </label>
+                                            <textarea
+                                                class="form-control"
+                                                id="parameter-default-migration"
+                                                rows="5">
+                                            </textarea>
+
+                                            <label for="parameter-map-regions">
+                                                Mapping regions to countries
+                                            </label>
+                                            <textarea class="form-control"
+                                                      id="parameter-map-regions"
+                                                      rows="5">
+                                            </textarea>
+                                            <p class="form-text text-muted">
+                                                To have more fine-grained control,
+                                                you can have multiple regions per
+                                                country. But then for the map to
+                                                continue working you need to specify
+                                                which regions are in which countries.
+                                            </p>
+
+                                            <label for="parameter-map-colors">
+                                                Mapping infection rates to colors
+                                            </label>
+                                            <textarea class="form-control"
+                                                      id="parameter-map-colors"
+                                                      rows="5">
+                                            </textarea>
+                                            <p class="form-text text-muted">
+                                                This determines the map colors.
+                                            </p>
                                         </div>
                                     </form>
                                 </div>
@@ -645,11 +744,42 @@
                             <span>World map showing infections</span>
                         </div>
                     </div>
+                    <div>
+                        <svg width="260" height="100">
+                            <rect x="0" y="0" height="15" width="60"
+                                  class="low-infection-rate"
+                            />
+                            <rect x="0" y="15" height="15" width="60"
+                                  class="moderate-infection-rate"
+                            />
+                            <rect x="0" y="30" height="15" width="60"
+                                  class="serious-infection-rate"
+                            />
+                            <rect x="0" y="45" height="15" width="60"
+                                  class="very-serious-infection-rate"
+                            />
+                            <rect x="0" y="60" height="15" width="60"
+                                  class="extremely-serious-infection-rate"
+                            />
+                            <text x="70" y="0" class="legend-text">
+                                <tspan id="low" x="70" y="12">
+                                </tspan>
+                                <tspan id="moderate" x="70" y="27">
+                                </tspan>
+                                <tspan id="serious" x="70" y="42">
+                                </tspan>
+                                <tspan id="very-serious" x="70" y="57">
+                                </tspan>
+                                <tspan id="extremely-serious" x="70" y="72">
+                                </tspan>
+                            </text>
+                        </svg>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-xs-12 pane">
-                    <h3>Results</h3>
+                    <h3 id="results-heading">Results</h3>
                     <div class="row">
                         <div class="col-sm-6 col-xs-12 pane pane-left">
                             <h3>World</h3>
