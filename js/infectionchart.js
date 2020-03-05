@@ -55,13 +55,18 @@
                                 ticks: {
                                     beginAtZero: true,
                                     callback: function(value, index, values) {
-                                        const s = new Intl.NumberFormat(
-                                            'en-US',
-                                            {
-                                                style: 'decimal',
-                                                maximumFractionDigits: 0
-                                            }).format(value);
-                                        return s;
+                                        if (value >= 1000000) {
+                                            return Math.round(value / 1000000)
+                                                + "M";
+                                        } else {
+                                            const s = new Intl.NumberFormat(
+                                                'en-US',
+                                                {
+                                                    style: 'decimal',
+                                                    maximumFractionDigits: 0
+                                                }).format(value);
+                                            return s;
+                                        }
                                     }
                                 },
                                 display: true,
