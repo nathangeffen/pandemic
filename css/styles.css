@@ -26,16 +26,18 @@ label {
 
 .pane {
     padding-bottom: 12px;
-    border-bottom: 1px solid lightgray;
+    /* border-bottom: 1px solid lightgray; */
 }
 
 .pane-left {
     border-right: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
 }
 
 .pane-right {
 
     border-left: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
 }
 
 #simulate-button {
@@ -97,4 +99,10 @@ label {
 
 .legend-text {
     font-size: 10px;
+}
+
+footer {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: lightgray;
 }

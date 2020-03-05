@@ -23,11 +23,10 @@
             <h1>Model a pandemic</h1>
         </div>
 
-
         <div class="container">
 
             <div class="row">
-                <div class="col-sm-6 col-xs-12 pane pane-left">
+                <div class="col-md-6 col-sm-12 pane pane-left">
                     <div class="mx-auto"
                          style="text-align:center;">
                         <button id="simulate-button"
@@ -735,7 +734,7 @@
 
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 pane pane-right">
+                <div class="col-sm-12 col-md-6 pane pane-right">
                     <div id="charts">
                         <canvas id="chart"></canvas>
                     </div>
@@ -778,15 +777,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12 col-xs-12 pane">
+                <div class="col-md-12 col-sm-12 pane">
                     <h3 id="results-heading">Results</h3>
                     <div class="row">
-                        <div class="col-sm-6 col-xs-12 pane pane-left">
+                        <div class="col-md-6 col-sm-12 pane pane-left">
                             <h3>World</h3>
                             <div id="world-results" class="pre-scrollable">
                             </div>
                         </div>
-                        <div class="col-sm-6 col-xs-12 pane pane-left">
+                        <div class="col-md-6 col-sm-12 pane pane-right">
                             <h3>Regions</h3>
                             <div id="region-results" class="pre-scrollable">
                             </div>
@@ -797,6 +796,28 @@
 
 
         </div>
+
+        <footer class="text-center">
+            <p>
+                &copy; Nathan Geffen 2020 under
+                <a href="https://raw.githubusercontent.com/nathangeffen/pandemic/master/LICENSE">
+                    MIT License
+                </a>
+            </p>
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.simhub.online/">
+                        Simhub home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="https://github.com/nathangeffen/pandemic">
+                        Source code on Github
+                    </a>
+                </li>
+            </ul>
+        </footer>
 
         <script
             src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
