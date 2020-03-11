@@ -40,12 +40,18 @@ should be inferred from it.`;
         [1.0, "extremely-serious-infection-rate"]
     ]
 
-    const  defaultTransitionRates =  {
-        beta: 0.18,
+    const defaultTransitionRates =  {
+        avgContacts: 10,
+        probInfection: 0.03,
+        reducedContactMult: 0.5,
+        reduceAfter: 100,
+        probInfectionSummer: 0.03,
+        summerStart: 120,
+        summerDuration: 180,
         vaccinate: 0.0,
         lockdown: 0.00, // For the default model we don't use this.
-        uncontagious_contagious: 0.3,
-        contagious_ill: 0.4,
+        uncontagious_contagious: 0.5,
+        contagious_ill: 0.5,
         ill_cured: 0.07,
         ill_dead: 0.00085,
         default_rate: 0.0
@@ -89,6 +95,9 @@ should be inferred from it.`;
             stages: {
                 unsusceptible: (1 - lowSusceptibility) * 25203198.0,
                 susceptible: lowSusceptibility * 25203198.0,
+            },
+            transitionRates: {
+                summerStart: 0,
             }
         },
         {
@@ -96,6 +105,9 @@ should be inferred from it.`;
             stages: {
                 unsusceptible: (1 - lowSusceptibility) * 211049527.0,
                 susceptible: lowSusceptibility * 211049527.0,
+            },
+            transitionRates: {
+                summerStart: 0,
             }
         },
         {
@@ -188,6 +200,9 @@ should be inferred from it.`;
             stages: {
                 unsusceptible: (1 - highSusceptibility) * 57792518.0,
                 susceptible: highSusceptibility * 57792518.0,
+            },
+            transitionRates: {
+                summerStart: 0,
             }
         },
         {
@@ -438,7 +453,7 @@ should be inferred from it.`;
             let html = `<h3>${pandemic.iterationName}:
                  ${pandemic.iteration.toString()}</h3>`;
             html = outputStage(html, "Susceptible",
-                                pandemic.count("susceptible"));
+                               pandemic.count("susceptible"));
             html = outputStage(html, "Infected", pandemic.countInfected());
             html = outputStage(html, "Cured", pandemic.count("cured"));
             html = outputStage(html, "Dead", pandemic.countDeaths());
@@ -501,11 +516,12 @@ should be inferred from it.`;
 
         simulation = Simulation.create({
             name: document.getElementById("parameter-name").value,
-            description: document.getElementById("parameter-description").value,
+            description: document.getElementById("parameter-description").
+                value,
             delay: document.getElementById("parameter-delay").value,
             executeElem: "simulate-button",
-            iterations: Number(document.getElementById("parameter-iterations").
-                               value),
+            iterations: Number(document.
+                               getElementById("parameter-iterations").value),
             onExecute: (elem) => {
                 elem.innerHTML = "Stop";
                 elem.classList.remove("btn-primary");
@@ -519,7 +535,6 @@ should be inferred from it.`;
             update: pandemic.update,
             output: output
         });
-
     }
 
     initUserInterface();
@@ -528,9 +543,9 @@ should be inferred from it.`;
 
     document.getElementById("parameter-form").
         addEventListener("input", function () {
-        document.getElementById("simulate-button").innerHTML = "Simulate";
-        formChanged = true;
-    });
+            document.getElementById("simulate-button").innerHTML = "Simulate";
+            formChanged = true;
+        });
 
     document.getElementById("simulate-button").
         addEventListener("click", function(e) {
@@ -568,4 +583,85 @@ should be inferred from it.`;
             document.getElementById("simulate-button").innerHTML = "Simulate";
             document.getElementById("reset-button").classList.add("disabled");
         });
+
+    const ver = "20201003";
+
+    const uploadModel = (str) => {
+        try {
+            const obj = JSON.parse(str);
+            console.log(obj);
+            document.getElementById("parameter-name").value = obj["name"],
+            document.getElementById("parameter-description").value =
+                obj["description"];
+            document.getElementById("parameter-iterations").value =
+                obj["iterations"];
+            document.getElementById("parameter-delay").value = obj["delay"];
+            document.getElementById("parameter-regions").value =
+                JSON.stringify(obj["regions"]);
+            document.getElementById("parameter-migrations").value =
+                JSON.stringify(obj["migrations"]);
+            document.getElementById("parameter-default-migration").value =
+                JSON.stringify(obj["defaultMigration"]);
+            document.getElementById("parameter-transition-rates").value =
+                JSON.stringify(obj["defaultTransitionRates"]);
+            document.getElementById("parameter-map-regions").value =
+                JSON.stringify(obj["mapRegions"]);
+            document.getElementById("parameter-map-colors").value =
+                JSON.stringify(obj["mapColors"]);
+        } catch (err) {
+            console.log("Error processing file: " + err);
+            throw("Error processing file: " + err);
+        }
+    };
+
+    const downloadModel = () => {
+        const obj = {
+            "ver": ver,
+            "name": document.getElementById(
+                "parameter-name").value,
+            description: document.getElementById(
+                "parameter-description").value,
+            iterations: document.getElementById(
+                "parameter-iterations").value,
+            delay: document.getElementById("parameter-delay").value,
+            regions: JSON.parse(
+                document.getElementById("parameter-regions").value),
+            migrations: JSON.parse(document.getElementById(
+                "parameter-migrations").value),
+            defaultMigration: JSON.parse(document.getElementById(
+                "parameter-default-migration").value),
+            defaultTransitionRates: JSON.parse(document.getElementById(
+                "parameter-transition-rates").value),
+            mapRegions: JSON.parse(document.getElementById(
+                "parameter-map-regions").value),
+            mapColors: JSON.parse(document.getElementById(
+                "parameter-map-colors").value)
+        }
+
+        const data = "data:text/json;charset=utf-8," +
+              encodeURIComponent(JSON.stringify(obj, null, 4));
+        document.getElementById("hidden-download").setAttribute("href", data);
+        document.getElementById("hidden-download").
+            setAttribute("download", obj.name + ".json");
+        document.getElementById("hidden-download").click();
+    }
+
+    document.getElementById("download-button").
+        addEventListener("click", downloadModel);
+    document.getElementById("upload-button").
+        addEventListener("click", () => {
+            document.getElementById("hidden-upload").click();
+        });
+
+    document.getElementById("hidden-upload").
+        addEventListener('change', function(e) {
+            let file = this.files[0];
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                uploadModel(reader.result);
+                document.getElementById("reset-button").click();
+            }
+            reader.readAsText(file);
+        })
+
 });

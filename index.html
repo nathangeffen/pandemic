@@ -86,6 +86,14 @@
                                         Covid-19 from it.
                                     </p>
 
+                                    <p>
+                                        You can modify the model's parameters to
+                                        create your own model. You can load and
+                                        run other models, and you can save your
+                                        own models to your web browser's storage
+                                        for reuse later.
+                                    </p>
+
                                     <h2>
                                         Technical details of the model
                                     </h2>
@@ -228,18 +236,34 @@
                                     </p>
                                     <dl>
                                         <dt>
-                                            beta
+                                            avgContacts
                                         </dt>
                                         <dd>
-                                            The rate at which contagious
-                                            infected people (i.e. people in the
-                                            contagious or ill stages) transmit
-                                            to susceptible people. This moves
-                                            people from the <em>susceptible</em>
+                                            The average number of contacts a
+                                            person has per day for which there
+                                            is an opportunity to transmit the
+                                            infection.
+                                        </dd>
+                                        <dt>
+                                            probInfection
+                                        </dt>
+                                        <dd>
+                                            The probability of a contagious
+                                            infected person (i.e. people in the
+                                            contagious or ill stages)
+                                            transmitting to a susceptible
+                                            contact.  This is multiplied by
+                                            <em>avgContacts</em> to get the
+                                            infection rate per day, which
+                                            determined how many people to move
+                                            from the
+                                            <em>susceptible</em>
                                             compartment to the
                                             <em>uncontagious</em>
                                             one.
                                             The equations for this are:<br />
+                                            beta = avgContacts * probInfection
+                                            <br/>
                                             delta = X * beta * (Y / (X + Y))<br/>
                                             X -= delta<br />
                                             Y -= delta<br />
@@ -247,6 +271,42 @@
                                             X = susceptible population<br />
                                             Y = infected population less
                                             uncontagious infected population
+                                        </dd>
+                                        <dt>
+                                            reducedContactMult, reduceAfter
+                                        </dt>
+                                        <dd>
+                                            When a population has a certain
+                                            number of ill people, quarantine
+                                            measures may be implemented that
+                                            reduce the average number of
+                                            contacts. These two parameter are
+                                            used to reflect this.  multiply the
+                                            avgContacts to reflect this. It
+                                            a region's ill people exceeds the
+                                            value of <em>reduceAfter</em>, then
+                                            <em>avgContacts</em> is reduced by
+                                            multiplying it by
+                                            <em>reducedContactMult</em>.
+                                        </dd>
+                                        <dt>
+                                            probInfectionSummer, summerStart,
+                                            summerDuration
+                                        </dt>
+                                        <dd>
+                                            If the infection rate changes
+                                            seasonally (e.g. influenza and
+                                            coronavirus), then you can set a
+                                            different infection rate for summer.
+                                            <em>probInfectionSummer</em> is the
+                                            probability of infection in summer.
+                                            By default this is set to
+                                            <em>probInfection</em>.
+                                            <em>summerStart</em> is the
+                                            simulation day that summer starts
+                                            (this cycles every 365 days).
+                                            <em>summerDuration</em> is the
+                                            number of days of summer.
                                         </dd>
                                         <dt>
                                             vaccinate
@@ -466,7 +526,33 @@
                                  aria-labelledby="parameter-form-card"
                                  data-parent="#parameter-form-accordian">
                                 <div class="card-body">
+                                    <div class="mx-auto"
+                                         style="text-align:center;">
+                                        <button
+                                            id="download-button"
+                                            class="btn btn-primary"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Download the model to your computer">
+                                            Save this model
+                                        </button>
+                                        <a id="hidden-download"
+                                           style="display: none;">
+                                        </a>
 
+                                        <button
+                                            id="upload-button"
+                                            class="btn btn-primary"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Load a saved model to replace this one">
+                                            Load a saved model
+                                        </button>
+                                        <input id="hidden-upload"
+                                               type="file"
+                                               style="display: none;">
+                                        </input>
+                                    </div>
                                     <form id="parameter-form">
                                         <div class="form-group">
                                             <label for="parameter-name">
@@ -846,10 +932,10 @@
         </script>
         <script src="js/jquery.mapael.min.js"></script>
         <script src="js/world_countries.min.js"></script>
-        <script src="js/pandemic.js?v=20200305"></script>
-        <script src="js/infectionchart.js?v=20200305"></script>
-        <script src="js/infectionmap.js?v=20200305"></script>
-        <script src="js/simulation.js?v=20200305"></script>
-        <script src="js/userinterface.js?v=20200305"></script>
+        <script src="js/pandemic.js?v=20200311"></script>
+        <script src="js/infectionchart.js?v=20200311"></script>
+        <script src="js/infectionmap.js?v=20200311"></script>
+        <script src="js/simulation.js?v=20200311"></script>
+        <script src="js/userinterface.js?v=20200311"></script>
     </body>
 </html>

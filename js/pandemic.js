@@ -9,7 +9,13 @@
 
         constructor(rates) {
             this.rates = {
-                beta: 0.0,
+                avgContacts: 0.0,
+                probInfection: 0.0,
+                reducedContactMult: 1.0,
+                reduceAfter: 100.0,
+                probInfectionSummer: undefined,
+                summerStart: 0,
+                summerDuration: 180,
                 vaccinate: 0.0,
                 lockdown: 0.0,
                 uncontagious_contagious: 0.0,
@@ -28,6 +34,7 @@
             if (key in this.rates) {
                 this.rates[key] = value;
             } else {
+                console.log("Unknown rate: " + key);
                 throw "Unknown rate: " + key;
             }
         }
@@ -35,6 +42,9 @@
         setRates(dict) {
             for (const [key, value] of Object.entries(dict)) {
                 this.setRate(key, value);
+            }
+            if (this.rates["probInfectionSummer"] === undefined) {
+                this.rates["probInfectionSummer"] = this.rates["probInfection"];
             }
         }
 
@@ -50,8 +60,37 @@
             return total;
         }
 
-        setNewInfections(stages) {
-            let beta = this.rates["beta"];
+        setNewInfections(stages, iteration) {
+            let beta;
+            let probInfection;
+            let season = 0;
+
+            let day = iteration % 365;
+            let start = this.rates["summerStart"];
+            let end = (start + this.rates["summerDuration"]) % 365;
+
+            if (end > start) {
+                if (day >= start && day < end) {
+                    season = 1;
+                }
+            } else {
+                if (day >= start || day < end) {
+                    season = 1;
+                }
+            }
+
+            if (season === 0) {
+                probInfection = this.rates["probInfection"];
+            } else {
+                probInfection = this.rates["probInfectionSummer"];
+            }
+
+            if (stages["ill"] <= this.rates["reduceAfter"]) {
+                beta = this.rates["avgContacts"] * probInfection;
+            } else {
+                beta = this.rates["avgContacts"] *
+                    this.rates["reducedContactMult"] * probInfection;
+            }
             let X = stages["susceptible"];
             let Y = this.countInfected(stages) - stages["uncontagious"];
             let N = X + Y;
@@ -73,13 +112,13 @@
                 rate = this.rates[stage_key];
             } else {
                 console.log("Unknown transition rate: ", stage_key);
-                throw("Unknown transition rate");
+                throw "Unknown transition rate " + stage_key;
             }
             this.setStages(stages, stage_from, stage_to, rate);
         }
 
-        transition(stages) {
-            this.setNewInfections(stages);
+        transition(stages, iteration) {
+            this.setNewInfections(stages, iteration);
             if (stages["ill"] > 1.0 && this.rates["lockdown"] > 0.0) {
                 this.setStages(stages, "susceptible", "unsusceptible",
                                this.rates["lockdown"]);
@@ -118,6 +157,7 @@
             if (key in this.stages) {
                 this.stages[key] = value;
             } else {
+                console.log("Unknown stage: " + key);
                 throw "Unknown stage: " + key;
             }
         }
@@ -136,8 +176,8 @@
             return this.infection.countPopulation(this.stages);
         }
 
-        update() {
-            this.infection.transition(this.stages);
+        update(iteration) {
+            this.infection.transition(this.stages, iteration);
         }
 
     }
@@ -182,11 +222,11 @@
                         defaultMigration["reducedFromTravel"];
 
                     if (! (obj["from"] in regions) ) {
-                        throw("Unknown region in migration " + obj["from"]);
+                        throw "Unknown region in migration " + obj["from"];
                     }
 
                     if (! (obj["to"] in regions) ) {
-                        throw("Unknown region in migration " + obj["to"]);
+                        throw "Unknown region in migration " + obj["to"];
                     }
 
                     if (i == 0) {
@@ -331,11 +371,11 @@
         }
 
         parms.update = () => {
-            parms.iteration++;
             for (let [name, region] of Object.entries(parms.regions)) {
-                region.update();
+                region.update(parms.iteration);
             }
             parms.migrations.update(parms.regions);
+            parms.iteration++;
         }
 
 
