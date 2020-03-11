@@ -266,11 +266,15 @@
                                             <br/>
                                             delta = X * beta * (Y / (X + Y))<br/>
                                             X -= delta<br />
-                                            Y -= delta<br />
+                                            U += delta<br />
                                             Where:<br />
                                             X = susceptible population<br />
                                             Y = infected population less
                                             uncontagious infected population
+                                            <br />
+                                            U = uncontagious infected population
+                                            (Everyone who is infected starts off
+                                            uncontagious.)
                                         </dd>
                                         <dt>
                                             reducedContactMult, reduceAfter
@@ -281,8 +285,7 @@
                                             measures may be implemented that
                                             reduce the average number of
                                             contacts. These two parameter are
-                                            used to reflect this.  multiply the
-                                            avgContacts to reflect this. It
+                                            used to reflect this. If
                                             a region's ill people exceeds the
                                             value of <em>reduceAfter</em>, then
                                             <em>avgContacts</em> is reduced by
