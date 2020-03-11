@@ -597,17 +597,17 @@ should be inferred from it.`;
                 obj["iterations"];
             document.getElementById("parameter-delay").value = obj["delay"];
             document.getElementById("parameter-regions").value =
-                JSON.stringify(obj["regions"]);
+                JSON.stringify(obj["regions"], null, 4);
             document.getElementById("parameter-migrations").value =
-                JSON.stringify(obj["migrations"]);
+                JSON.stringify(obj["migrations"], null, 4);
             document.getElementById("parameter-default-migration").value =
-                JSON.stringify(obj["defaultMigration"]);
+                JSON.stringify(obj["defaultMigration"], null, 4);
             document.getElementById("parameter-transition-rates").value =
-                JSON.stringify(obj["defaultTransitionRates"]);
+                JSON.stringify(obj["defaultTransitionRates"], null, 4);
             document.getElementById("parameter-map-regions").value =
-                JSON.stringify(obj["mapRegions"]);
+                JSON.stringify(obj["mapRegions"], null, 4);
             document.getElementById("parameter-map-colors").value =
-                JSON.stringify(obj["mapColors"]);
+                JSON.stringify(obj["mapColors"], null, 4);
         } catch (err) {
             console.log("Error processing file: " + err);
             throw("Error processing file: " + err);
