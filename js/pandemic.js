@@ -1,5 +1,6 @@
 "use strict";
 
+
 (function(pandemic, undefined) {
 
     const living = ["unsusceptible", "susceptible", "uncontagious",
@@ -91,10 +92,9 @@
                 beta = this.rates["avgContacts"] *
                     this.rates["reducedContactMult"] * probInfection;
             }
-            let X = stages["susceptible"];
-            let Y = this.countInfected(stages) - stages["uncontagious"];
-            let N = X + Y;
-            let delta = X * beta * ( Y / N );
+            const N = this.countPopulation(stages);
+            const s_t = stages["susceptible"] / N;
+            let delta = beta * s_t * (stages["contagious"] + stages["ill"]);
             stages["susceptible"] -= delta;
             stages["uncontagious"] += delta;
         }

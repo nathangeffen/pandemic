@@ -31,6 +31,7 @@ should be inferred from it.`;
         "ZA": ["South Africa"],
     };
 
+    const mapName = "world_countries";
     const mapColors = [
         [0.00001, "no-infections"],
         [0.00001 * 5, "low-infection-rate"],
@@ -73,9 +74,9 @@ should be inferred from it.`;
     /* Susceptible population rates, based on CDC flu
        https://www.cdc.gov/flu/about/keyfacts.htm
     */
-    const lowSusceptibility = 0.08;
+    const lowSusceptibility = 1.0;
     /* For countries with weak health systems */
-    const highSusceptibility = 0.12;
+    const highSusceptibility = 1.0;
 
     /* Percentage of infections that will be blocked at ports
        of a country. This is just a guess. */
@@ -401,6 +402,7 @@ should be inferred from it.`;
         JSON.stringify(defaultMigration, null, 4);
     document.getElementById("parameter-transition-rates").value =
         JSON.stringify(defaultTransitionRates, null, 4);
+    document.getElementById("parameter-map-name").value = mapName;
     document.getElementById("parameter-map-regions").value =
         JSON.stringify(mapRegions, null, 4);
     document.getElementById("parameter-map-colors").value =
@@ -487,7 +489,7 @@ should be inferred from it.`;
 
         let infectionMap = InfectionMap.create({
             container: "mapcontainer",
-            name: "world_countries",
+            name: document.getElementById("parameter-map-name").value,
             regions: parse("map-regions"),
             pandemic: pandemic,
             mapColors: parse("map-colors")
@@ -584,7 +586,7 @@ should be inferred from it.`;
             document.getElementById("reset-button").classList.add("disabled");
         });
 
-    const ver = "20201003";
+    const ver = "20200322";
 
     const uploadModel = (str) => {
         try {
@@ -604,6 +606,8 @@ should be inferred from it.`;
                 JSON.stringify(obj["defaultMigration"], null, 4);
             document.getElementById("parameter-transition-rates").value =
                 JSON.stringify(obj["defaultTransitionRates"], null, 4);
+            document.getElementById("parameter-map-name").value =
+                obj["mapName"];
             document.getElementById("parameter-map-regions").value =
                 JSON.stringify(obj["mapRegions"], null, 4);
             document.getElementById("parameter-map-colors").value =
@@ -632,6 +636,7 @@ should be inferred from it.`;
                 "parameter-default-migration").value),
             defaultTransitionRates: JSON.parse(document.getElementById(
                 "parameter-transition-rates").value),
+            mapName: document.getElementById("parameter-map-name").value,
             mapRegions: JSON.parse(document.getElementById(
                 "parameter-map-regions").value),
             mapColors: JSON.parse(document.getElementById(

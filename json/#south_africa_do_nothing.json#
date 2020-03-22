@@ -1,0 +1,408 @@
+{
+    "ver": "20200322",
+    "name": "SA_do_nothing",
+    "description": "Attempt to model Covid-19 in South Africa. Do nothing scenario. Assumptions: 80% of population is susceptible, infectiousness increases 10-fold in winter, undiagnosed cases = 2 * diagnosed cases. Initial infections per province as of 21 March.",
+    "iterations": "365",
+    "delay": "0",
+    "regions": [
+        {
+            "name": "ZA-EC",
+            "stages": {
+                "unsusceptible": 0.2 * 6712276,
+                "susceptible": 0.8 * 6712276,
+                "uncontagious": 2 * 1,
+                "contagious": 1
+            },
+        },
+        {
+            "name": "ZA-FS",
+            "stages": {
+                "unsusceptible": 0.2 * 2745590,
+                "susceptible": 0.8 * 2745590,
+                "uncontagious": 2 * 7,
+                "contagious": 7
+            }
+        },
+        {
+            "name": "ZA-GT",
+            "stages": {
+                "unsusceptible": 0.2 * 12272263,
+                "susceptible": 0.8 * 12272263,
+                "uncontagious": 2 * 125,
+                "contagious": 125
+            }
+        },
+        {
+            "name": "China (rest)",
+            "stages": {
+                "unsusceptible": 1230635963.1200001,
+                "susceptible": 107011822.88
+            }
+        },
+        {
+            "name": "France",
+            "stages": {
+                "unsusceptible": 59919349.760000005,
+                "susceptible": 5210378.24
+            }
+        },
+        {
+            "name": "Germany",
+            "stages": {
+                "unsusceptible": 76835681.4,
+                "susceptible": 6681363.600000001
+            }
+        },
+        {
+            "name": "India",
+            "stages": {
+                "unsusceptible": 1190325206.4,
+                "susceptible": 162317073.6
+            }
+        },
+        {
+            "name": "Iran",
+            "stages": {
+                "unsusceptible": 71984165.44,
+                "susceptible": 9816022.56
+            }
+        },
+        {
+            "name": "Italy Milan",
+            "stages": {
+                "unsusceptible": 2999048.2,
+                "susceptible": 260786.80000000002
+            }
+        },
+        {
+            "name": "Italy (rest)",
+            "stages": {
+                "unsusceptible": 52778059.52,
+                "susceptible": 4589396.48
+            }
+        },
+        {
+            "name": "Malaysia",
+            "stages": {
+                "unsusceptible": 28115803.76,
+                "susceptible": 3833973.2399999998
+            }
+        },
+        {
+            "name": "Nigeria",
+            "stages": {
+                "unsusceptible": 172369721.04,
+                "susceptible": 23504961.96
+            }
+        },
+        {
+            "name": "Japan",
+            "stages": {
+                "unsusceptible": 117026016.64,
+                "susceptible": 0.0064
+            }
+        },
+        {
+            "name": "Singapore",
+            "stages": {
+                "unsusceptible": 5339990.04,
+                "susceptible": 464346.96
+            }
+        },
+        {
+            "name": "South Africa",
+            "stages": {
+                "unsusceptible": 50857415.84,
+                "susceptible": 6935102.16
+            },
+            "transitionRates": {
+                "summerStart": 0
+            }
+        },
+        {
+            "name": "South Korea",
+            "stages": {
+                "unsusceptible": 47077969.52,
+                "susceptible": 4093736.48
+            }
+        },
+        {
+            "name": "Spain",
+            "stages": {
+                "unsusceptible": 42997833.92,
+                "susceptible": 3738942.08
+            }
+        },
+        {
+            "name": "Thailand",
+            "stages": {
+                "unsusceptible": 63354432.88,
+                "susceptible": 5509081.12
+            }
+        },
+        {
+            "name": "United Kingdom",
+            "stages": {
+                "unsusceptible": 62127758.24,
+                "susceptible": 5402413.76
+            }
+        },
+        {
+            "name": "United States",
+            "stages": {
+                "unsusceptible": 300928563.8,
+                "susceptible": 26167701.2
+            }
+        },
+        {
+            "name": "Vietnam",
+            "stages": {
+                "unsusceptible": 88745137.52000001,
+                "susceptible": 7716968.48
+            }
+        }
+    ],
+    "migrations": [
+        {
+            "from": "Australia",
+            "to": "Singapore",
+            "actual": 4148.534246575343
+        },
+        {
+            "from": "Australia",
+            "to": "China (rest)",
+            "actual": 3624.6575342465753
+        },
+        {
+            "from": "Brazil",
+            "to": "United States",
+            "actual": 7615.676712328767
+        },
+        {
+            "from": "China Wuhan",
+            "to": "China (rest)",
+            "actual": 10000,
+            "screening": 0.1
+        },
+        {
+            "from": "China (rest)",
+            "to": "India",
+            "actual": 771.9671232876713
+        },
+        {
+            "from": "China (rest)",
+            "to": "Iran",
+            "actual": 136.986301369863,
+            "screening": 0.1
+        },
+        {
+            "from": "China (rest)",
+            "to": "Italy Milan",
+            "actual": 471.51933517657443,
+            "screening": 0.1
+        },
+        {
+            "from": "China (rest)",
+            "to": "Italy (rest)",
+            "actual": 8297.924500439865,
+            "screening": 0.1
+        },
+        {
+            "from": "China (rest)",
+            "to": "Nigeria",
+            "actual": 547.945205479452,
+            "screening": 0.1
+        },
+        {
+            "from": "China (rest)",
+            "to": "Japan",
+            "actual": 30056.805479452054
+        },
+        {
+            "from": "China (rest)",
+            "to": "Singapore",
+            "actual": 9360.205479452055
+        },
+        {
+            "from": "China (rest)",
+            "to": "South Africa",
+            "actual": 232.03013698630136
+        },
+        {
+            "from": "China (rest)",
+            "to": "South Korea",
+            "actual": 26164.383561643837
+        },
+        {
+            "from": "China (rest)",
+            "to": "Thailand",
+            "actual": 30122.523287671233,
+            "symmetrical": 1,
+            "illCorrection": 0.1,
+            "screening": 0.5
+        },
+        {
+            "from": "China (rest)",
+            "to": "United States",
+            "actual": 14361.131506849315
+        },
+        {
+            "from": "China (rest)",
+            "to": "Malaysia",
+            "actual": 4908.008219178082
+        },
+        {
+            "from": "China (rest)",
+            "to": "Vietnam",
+            "actual": 15908.013698630137
+        },
+        {
+            "from": "Italy (rest)",
+            "to": "France",
+            "actual": 12979.353424657535
+        },
+        {
+            "from": "Italy (rest)",
+            "to": "Germany",
+            "actual": 37908.04109589041
+        },
+        {
+            "from": "Italy (rest)",
+            "to": "Spain",
+            "actual": 17966.49315068493
+        },
+        {
+            "from": "Italy (rest)",
+            "to": "United Kingdom",
+            "actual": 10361.320547945206
+        },
+        {
+            "from": "Italy (rest)",
+            "to": "Brazil",
+            "actual": 497.241095890411
+        },
+        {
+            "from": "Malaysia",
+            "to": "Singapore",
+            "actual": 39541.82465753425
+        }
+    ],
+    "defaultMigration": {
+        "illCorrection": 0.1,
+        "screening": 0.9,
+        "toDetected": 100,
+        "fromDetected": 100,
+        "reducedFromTravel": 0.5,
+        "reducedToTravel": 0.5,
+        "symmetrical": 1
+    },
+    "defaultTransitionRates": {
+        "avgContacts": 10,
+        "probInfection": 0.03,
+        "reducedContactMult": 0.5,
+        "reduceAfter": 100,
+        "probInfectionSummer": 0.03,
+        "summerStart": 0,
+        "summerDuration": 180,
+        "vaccinate": 0,
+        "lockdown": 0,
+        "uncontagious_contagious": 0.5,
+        "contagious_ill": 0.5,
+        "ill_cured": 0.07,
+        "ill_dead": 0.00085,
+        "default_rate": 0
+    },
+    "mapName": "south_africa",
+    "mapRegions": {
+        "LS": [
+            "Lesotho"
+        ],
+        "ZA-EC": [
+            "Eastern Cape"
+        ],
+        "ZA-FS": [
+            "Free State",
+        ],
+        "ZA-GT": [
+            "Gauteng",
+        ],
+        "ZA-LP": [
+            "Limpopo"
+        ],
+        "ZA-MP": [
+            "Mpumalanga"
+        ],
+        "ZA-NC": [
+            "Northern Cape"
+        ],
+        "ZA-NL": [
+            "KZN"
+        ],
+        "ZA-NW": [
+            "North West"
+        ],
+        "ZA-WC": [
+            "Western Cape"
+        ],
+        "IR": [
+            "Iran"
+        ],
+        "IT": [
+            "Italy Milan",
+            "Italy (rest)"
+        ],
+        "JP": [
+            "Japan"
+        ],
+        "KR": [
+            "South Korea"
+        ],
+        "MY": [
+            "Malaysia"
+        ],
+        "NG": [
+            "Nigeria"
+        ],
+        "SG": [
+            "Singapore"
+        ],
+        "TH": [
+            "Thailand"
+        ],
+        "US": [
+            "United States"
+        ],
+        "VN": [
+            "Vietnam"
+        ],
+        "ZA": [
+            "South Africa"
+        ]
+    },
+    "mapColors": [
+        [
+            0.00001,
+            "no-infections"
+        ],
+        [
+            0.00005,
+            "low-infection-rate"
+        ],
+        [
+            0.00025,
+            "moderate-infection-rate"
+        ],
+        [
+            0.00125,
+            "serious-infection-rate"
+        ],
+        [
+            0.00625,
+            "very-serious-infection-rate"
+        ],
+        [
+            1,
+            "extremely-serious-infection-rate"
+        ]
+    ]
+}
