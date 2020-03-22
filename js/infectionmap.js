@@ -19,6 +19,9 @@
             let population = 0.0;
             let desc = "";
             for (let i = 0; i < value.length; i++) {
+                if (! (value[i] in parms.pandemic.regions)) {
+                    throw "Unknown region: " + value[i];
+                }
                 infected += parms.pandemic.regions[value[i]].countInfected();
                 population += parms.pandemic.regions[value[i]].countPopulation();
                 desc += value[i];

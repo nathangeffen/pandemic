@@ -45,6 +45,10 @@ label {
     margin-bottom: 12px;
 }
 
+#download-button {
+    margin-bottom: 12px;
+}
+
 #results-heading {
     /* text-decoration: underline lightgray;*/
     margin-top: 16px;

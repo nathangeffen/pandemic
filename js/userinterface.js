@@ -34,27 +34,27 @@ should be inferred from it.`;
     const mapName = "world_countries";
     const mapColors = [
         [0.00001, "no-infections"],
-        [0.00001 * 5, "low-infection-rate"],
-        [0.00001 * 25, "moderate-infection-rate"],
-        [0.00001 * 25 * 5, "serious-infection-rate"],
-        [0.00001 * 25 * 25, "very-serious-infection-rate"],
+        [0.00001 * 10, "low-infection-rate"],
+        [0.00001 * 100, "moderate-infection-rate"],
+        [0.00001 * 1000, "serious-infection-rate"],
+        [0.00001 * 10000, "very-serious-infection-rate"],
         [1.0, "extremely-serious-infection-rate"]
     ]
 
     const defaultTransitionRates =  {
         avgContacts: 10,
-        probInfection: 0.03,
+        probInfection: 0.025,
         reducedContactMult: 0.5,
         reduceAfter: 100,
-        probInfectionSummer: 0.03,
+        probInfectionSummer: 0.02,
         summerStart: 120,
         summerDuration: 180,
         vaccinate: 0.0,
         lockdown: 0.00, // For the default model we don't use this.
         uncontagious_contagious: 0.5,
         contagious_ill: 0.5,
-        ill_cured: 0.07,
-        ill_dead: 0.00085,
+        ill_cured: 0.06,
+        ill_dead: 0.0008,
         default_rate: 0.0
     };
 
@@ -588,32 +588,35 @@ should be inferred from it.`;
 
     const ver = "20200322";
 
+    const uploadJSON = (obj) => {
+        document.getElementById("parameter-name").value = obj["name"],
+        document.getElementById("parameter-description").value =
+            obj["description"];
+        document.getElementById("parameter-iterations").value =
+            obj["iterations"];
+        document.getElementById("parameter-delay").value = obj["delay"];
+        document.getElementById("parameter-regions").value =
+            JSON.stringify(obj["regions"], null, 4);
+        document.getElementById("parameter-migrations").value =
+            JSON.stringify(obj["migrations"], null, 4);
+        document.getElementById("parameter-default-migration").value =
+            JSON.stringify(obj["defaultMigration"], null, 4);
+        document.getElementById("parameter-transition-rates").value =
+            JSON.stringify(obj["defaultTransitionRates"], null, 4);
+        document.getElementById("parameter-map-name").value =
+            obj["mapName"];
+        document.getElementById("parameter-map-regions").value =
+            JSON.stringify(obj["mapRegions"], null, 4);
+        document.getElementById("parameter-map-colors").value =
+            JSON.stringify(obj["mapColors"], null, 4);
+    }
+
     const uploadModel = (str) => {
         try {
             const obj = JSON.parse(str);
-            console.log(obj);
-            document.getElementById("parameter-name").value = obj["name"],
-            document.getElementById("parameter-description").value =
-                obj["description"];
-            document.getElementById("parameter-iterations").value =
-                obj["iterations"];
-            document.getElementById("parameter-delay").value = obj["delay"];
-            document.getElementById("parameter-regions").value =
-                JSON.stringify(obj["regions"], null, 4);
-            document.getElementById("parameter-migrations").value =
-                JSON.stringify(obj["migrations"], null, 4);
-            document.getElementById("parameter-default-migration").value =
-                JSON.stringify(obj["defaultMigration"], null, 4);
-            document.getElementById("parameter-transition-rates").value =
-                JSON.stringify(obj["defaultTransitionRates"], null, 4);
-            document.getElementById("parameter-map-name").value =
-                obj["mapName"];
-            document.getElementById("parameter-map-regions").value =
-                JSON.stringify(obj["mapRegions"], null, 4);
-            document.getElementById("parameter-map-colors").value =
-                JSON.stringify(obj["mapColors"], null, 4);
+            uploadJSON(obj);
         } catch (err) {
-            console.log("Error processing file: " + err);
+            alert("Error processing file: " + err);
             throw("Error processing file: " + err);
         }
     };
@@ -668,5 +671,26 @@ should be inferred from it.`;
             }
             reader.readAsText(file);
         })
+
+    document.getElementById("rsa-nothing-seasonal").
+        addEventListener('click', function(e) {
+            uploadJSON(modelSouthAfricaDoNothingSeasonal);
+            document.getElementById("reset-button").click();
+            alert("RSA Do nothing with seasonal infectiousness differences model loaded");
+        });
+
+    document.getElementById("rsa-nothing-noseasons").
+        addEventListener('click', function(e) {
+            uploadJSON(modelSouthAfricaDoNothingNoSeasons);
+            document.getElementById("reset-button").click();
+            alert("RSA Do nothing and no seasonal infectiousness differences model loaded");
+        });
+
+    document.getElementById("rsa-lockdown").
+        addEventListener('click', function(e) {
+            uploadJSON(modelSouthAfricaLockdown);
+            document.getElementById("reset-button").click();
+            alert("RSA Lockdown model loaded");
+        });
 
 });

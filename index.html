@@ -143,7 +143,7 @@
                                         The transition rates between stages
                                         (compartments) have been set
                                         experimentally. (See the <em>Change the
-                                        model parameters</em> section.)
+                                        model</em> section.)
                                     </p>
                                     <p>
                                         You will notice that a lot of the above
@@ -520,7 +520,7 @@
                                             data-target="#collapse-parameters"
                                             aria-expanded="false"
                                             aria-controls="collapse-parameters">
-                                        Change the model parameters
+                                        Change the model
                                     </button>
                                 </h2>
                             </div>
@@ -531,30 +531,36 @@
                                 <div class="card-body">
                                     <div class="mx-auto"
                                          style="text-align:center;">
-                                        <button
-                                            id="download-button"
-                                            class="btn btn-primary"
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="Download the model to your computer">
-                                            Save this model
-                                        </button>
-                                        <a id="hidden-download"
-                                           style="display: none;">
-                                        </a>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-6">
+                                                <button
+                                                    id="download-button"
+                                                    class="btn btn-primary"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="Download the model to your computer">
+                                                    Save this model
+                                                </button>
 
-                                        <button
-                                            id="upload-button"
-                                            class="btn btn-primary"
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="Load a saved model to replace this one">
-                                            Load a saved model
-                                        </button>
-                                        <input id="hidden-upload"
-                                               type="file"
-                                               style="display: none;">
-                                        </input>
+                                                <a id="hidden-download"
+                                                   style="display: none;">
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-6">
+                                                <button
+                                                    id="upload-button"
+                                                    class="btn btn-primary"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="Load a saved model to replace this one">
+                                                    Load a saved model
+                                                </button>
+                                                <input
+                                                    id="hidden-upload"
+                                                    type="file"
+                                                    style="display: none;" />
+                                            </div>
+                                        </div>
                                     </div>
                                     <form id="parameter-form">
                                         <div class="form-group">
@@ -826,7 +832,53 @@
 
                             </div>
                         </div>
+                    </div>
 
+                    <div class="card">
+                        <div class="card-header text-center"
+                             id="rsa-models">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link collapsed"
+                                        type="button"
+                                        data-toggle="collapse"
+                                        data-target="#collapse-rsa"
+                                        aria-expanded="false"
+                                        aria-controls="collapse-rsa">
+                                    Models of South African Covid-19 epidemic
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="collapse-rsa"
+                             class="collapse"
+                             aria-labelledby="rsa-models"
+                             data-parent="#parameter-form-accordian">
+                            <div class="card-body">
+                                <ul>
+                                    <li>
+                                        <button type="button"
+                                                id="rsa-nothing-seasonal"
+                                                class="btn btn-link">
+                                            Do nothing scenario with lower summer infectiousness
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button"
+                                                id="rsa-nothing-noseasons"
+                                                class="btn btn-link">
+                                            Do nothing scenario with no seasonal differences
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button"
+                                                id="rsa-lockdown"
+                                                class="btn btn-link">
+                                            Lockdown with no seasonal differences
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-6 pane pane-right">
@@ -876,7 +928,7 @@
                     <h3 id="results-heading">Results</h3>
                     <div class="row">
                         <div class="col-lg-6 col-md-12 pane pane-left">
-                            <h3>World</h3>
+                            <h3>Total</h3>
                             <div id="world-results" class="pre-scrollable">
                             </div>
                         </div>
@@ -942,10 +994,11 @@
         <script src="js/jquery.mapael.min.js"></script>
         <script src="js/world_countries.min.js"></script>
         <script src="js/south_africa.js"></script>
-        <script src="js/pandemic.js?v=20200311"></script>
-        <script src="js/infectionchart.js?v=20200311"></script>
-        <script src="js/infectionmap.js?v=20200311"></script>
-        <script src="js/simulation.js?v=20200311"></script>
-        <script src="js/userinterface.js?v=20200311"></script>
+        <script src="js/pandemic.js?v=20200323"></script>
+        <script src="js/othermodels.js?v=20200323"></script>
+        <script src="js/infectionchart.js?v=20200323"></script>
+        <script src="js/infectionmap.js?v=20200323"></script>
+        <script src="js/simulation.js?v=20200323"></script>
+        <script src="js/userinterface.js?v=20200323"></script>
     </body>
 </html>
