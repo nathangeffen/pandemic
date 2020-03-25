@@ -707,4 +707,10 @@ should be inferred from it.`;
             alert("RSA Lockdown model loaded");
         });
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const country = urlParams.get('country');
+    if (country === "ZA") {
+        document.getElementById("rsa-nothing-noseasons").click();
+    }
+
 });
