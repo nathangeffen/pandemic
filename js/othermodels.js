@@ -160,7 +160,7 @@ var modelSouthAfricaDoNothingSeasonal = {
         "vaccinate": 0,
         "uncontagious_contagious": 0.18,
         "contagious_ill": 0.9,
-        "ill_cured": 0.14,
+        "ill_recovered": 0.14,
         "ill_dead": 0.001,
         "default_rate": 0
     },

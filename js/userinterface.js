@@ -55,7 +55,7 @@ should be inferred from it.`;
         vaccinate: 0.0,
         uncontagious_contagious: 0.5,
         contagious_ill: 0.5,
-        ill_cured: 0.06,
+        ill_recovered: 0.06,
         ill_dead: 0.0008,
         default_rate: 0.0
     };
@@ -447,7 +447,7 @@ should be inferred from it.`;
             for (let [name, region] of Object.entries(pandemic.regions)) {
                 html += `<h4>${name}</h4>`;
                 html = outputRegion(html, region, "Infected", "infections");
-                html = outputRegion(html, region, "Cured", "cured");
+                html = outputRegion(html, region, "Recovered", "recovered");
                 html = outputRegion(html, region, "Dead", "dead");
             }
             regionResults.insertAdjacentHTML("afterbegin", html);
@@ -459,9 +459,9 @@ should be inferred from it.`;
             html = outputStage(html, "Susceptible",
                                pandemic.count("susceptible"));
             html = outputStage(html, "Infected", pandemic.countInfected());
-            html = outputStage(html, "Cured", pandemic.count("cured"));
+            html = outputStage(html, "Recovered", pandemic.count("recovered"));
             html = outputStage(html, "Dead", pandemic.countDeaths());
-            const cumInf = pandemic.countInfected() + pandemic.count("cured") +
+            const cumInf = pandemic.countInfected() + pandemic.count("recovered") +
                   pandemic.countDeaths();
             html +="Cum. infections: " +
                 new Intl.NumberFormat('en-US',
@@ -488,7 +488,6 @@ should be inferred from it.`;
         });
 
         if (infectionChart) {
-            console.log("Clearing");
             infectionChart.infectionChart.destroy();
         }
 

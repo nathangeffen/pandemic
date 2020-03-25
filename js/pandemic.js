@@ -4,7 +4,7 @@
 (function(pandemic, undefined) {
 
     const living = ["unsusceptible", "susceptible", "uncontagious",
-                    "contagious", "ill", "cured"];
+                    "contagious", "ill", "recovered"];
 
     class Infection {
 
@@ -23,7 +23,7 @@
                 vaccinate: 0.0,
                 uncontagious_contagious: 0.0,
                 contagious_ill: 0.0,
-                ill_cured: 0.0,
+                ill_recovered: 0.0,
                 ill_dead: 0.0,
                 default_rate: 0.0
             };
@@ -170,7 +170,7 @@
             }
             this.stageToStage(stages, "uncontagious", "contagious");
             this.stageToStage(stages, "contagious", "ill");
-            this.stageToStage(stages, "ill", "cured");
+            this.stageToStage(stages, "ill", "recovered");
             this.stageToStage(stages, "ill", "dead");
         }
     }
@@ -185,7 +185,7 @@
                 uncontagious: 0,
                 contagious: 0,
                 ill: 0,
-                cured: 0,
+                recovered: 0,
                 dead: 0
             };
             if (stages !== undefined) {
