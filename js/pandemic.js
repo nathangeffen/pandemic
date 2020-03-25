@@ -12,19 +12,26 @@
             this.rates = {
                 avgContacts: 0.0,
                 probInfection: 0.0,
-                reducedContactMult: 1.0,
-                reduceAfter: 100.0,
+                lockdownContactMult: 1.0,
+                lockdownAfter: 100.0,
+                lockdownIterations: 21,
+                lockdownMinBetween: 21,
+                lockdownMaxTimes: 1000000,
                 probInfectionSummer: undefined,
                 summerStart: 0,
                 summerDuration: 180,
                 vaccinate: 0.0,
-                lockdown: 0.0,
                 uncontagious_contagious: 0.0,
                 contagious_ill: 0.0,
                 ill_cured: 0.0,
                 ill_dead: 0.0,
                 default_rate: 0.0
             };
+
+            this.lockdown = false;
+            this.lockdownDays = 0;
+            this.lockdownBetween = this.rates["lockdownMinBetween"];
+            this.lockdownCount = 0;
 
             if (rates !== undefined) {
                 this.setRates(rates);
@@ -61,37 +68,75 @@
             return total;
         }
 
+        setLockdown(stages) {
+            const rates = this.rates;
+
+            if (this.lockdown === false &&
+                this.lockdownCount >= rates.lockdownMaxTimes) {
+                return;
+            }
+
+            if (this.lockdown === false && this.lockdownBetween > 0) {
+                --this.lockdownBetween;
+                return;
+            }
+
+            if (this.lockdown === false &&
+                stages["ill"] > this.rates["lockdownAfter"]) {
+                this.lockdownDays = 0;
+                this.lockdown = true;
+                ++this.lockdownCount;
+            }
+
+            if (this.lockdown === true &&
+                this.lockdownDays >= rates.lockdownIterations) {
+                this.lockdown = false;
+                this.lockdownBetween = rates.lockdownMinBetween;
+                return;
+            }
+
+            if (this.lockdown === true) {
+                ++this.lockdownDays;
+                return;
+            }
+        }
+
         setNewInfections(stages, iteration) {
             let beta;
             let probInfection;
             let season = 0;
 
-            let day = iteration % 365;
-            let start = this.rates["summerStart"];
-            let end = (start + this.rates["summerDuration"]) % 365;
+            if (this.rates["summerDuration"] > 0) {
+                let day = iteration % 365;
+                let start = this.rates["summerStart"];
+                let end = (start + this.rates["summerDuration"]) % 365;
 
-            if (end > start) {
-                if (day >= start && day < end) {
-                    season = 1;
-                }
-            } else {
-                if (day >= start || day < end) {
-                    season = 1;
+                if (end > start) {
+                    if (day >= start && day < end) {
+                        season = 1;
+                    }
+                } else {
+                    if (day >= start || day < end) {
+                        season = 1;
+                    }
                 }
             }
-
             if (season === 0) {
                 probInfection = this.rates["probInfection"];
             } else {
                 probInfection = this.rates["probInfectionSummer"];
             }
 
-            if (stages["ill"] <= this.rates["reduceAfter"]) {
-                beta = this.rates["avgContacts"] * probInfection;
-            } else {
+            // Are we in lockdown?
+
+            this.setLockdown(stages);
+            if (this.lockdown) {
                 beta = this.rates["avgContacts"] *
-                    this.rates["reducedContactMult"] * probInfection;
+                    this.rates["lockdownContactMult"] * probInfection;
+            } else {
+                beta = this.rates["avgContacts"] * probInfection;
             }
+
             const N = this.countPopulation(stages);
             const s_t = stages["susceptible"] / N;
             let delta = beta * s_t * (stages["contagious"] + stages["ill"]);
@@ -119,10 +164,6 @@
 
         transition(stages, iteration) {
             this.setNewInfections(stages, iteration);
-            if (stages["ill"] > 1.0 && this.rates["lockdown"] > 0.0) {
-                this.setStages(stages, "susceptible", "unsusceptible",
-                               this.rates["lockdown"]);
-            }
             if (this.rates["vaccinate"] > 0.0) {
                 this.setStages(stages, "susceptible", "unsusceptible",
                                this.rates["vaccinate"]);

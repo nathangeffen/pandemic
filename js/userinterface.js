@@ -44,13 +44,15 @@ should be inferred from it.`;
     const defaultTransitionRates =  {
         avgContacts: 10,
         probInfection: 0.025,
-        reducedContactMult: 0.5,
-        reduceAfter: 100,
+        lockdownContactMult: 0.5,
+        lockdownAfter: 100.0,
+        lockdownIterations: 21,
+        lockdownMinBetween: 21,
+        lockdownMaxTimes: 1000000,
         probInfectionSummer: 0.02,
         summerStart: 120,
         summerDuration: 180,
         vaccinate: 0.0,
-        lockdown: 0.00, // For the default model we don't use this.
         uncontagious_contagious: 0.5,
         contagious_ill: 0.5,
         ill_cured: 0.06,
@@ -185,8 +187,8 @@ should be inferred from it.`;
         {
             name: "Japan",
             stages: {
-                unsusceptible: (1 - lowSusceptibility) * 127202192.0,
-                susceptible: lowSusceptibility * lowSusceptibility
+                unsusceptible: (1 - lowSusceptibility) * 126476461.0,
+                susceptible: lowSusceptibility * 126476461.0
             }
         },
         {
@@ -459,6 +461,14 @@ should be inferred from it.`;
             html = outputStage(html, "Infected", pandemic.countInfected());
             html = outputStage(html, "Cured", pandemic.count("cured"));
             html = outputStage(html, "Dead", pandemic.countDeaths());
+            const cumInf = pandemic.countInfected() + pandemic.count("cured") +
+                  pandemic.countDeaths();
+            html +="Cum. infections: " +
+                new Intl.NumberFormat('en-US',
+                                          {
+                                              style: 'decimal',
+                                              maximumFractionDigits: 0
+                                          }).format(cumInf);
             html += "</p>";
             worldResults.insertAdjacentHTML("afterbegin", html);
         }
@@ -477,6 +487,10 @@ should be inferred from it.`;
             migrations: parse("migrations")
         });
 
+        if (infectionChart) {
+            console.log("Clearing");
+            infectionChart.infectionChart.destroy();
+        }
 
         infectionChart = InfectionChart.create({
             chartInfections: "chart",
@@ -485,7 +499,6 @@ should be inferred from it.`;
             infectionTimeSeries: pandemic.infectionTimeSeries,
             deathTimeSeries: pandemic.deathTimeSeries
         });
-
 
         let infectionMap = InfectionMap.create({
             container: "mapcontainer",
@@ -537,6 +550,8 @@ should be inferred from it.`;
             update: pandemic.update,
             output: output
         });
+        document.getElementById("world-results").innerHTML = "";
+        document.getElementById("region-results").innerHTML = "";
     }
 
     initUserInterface();

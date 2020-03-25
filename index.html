@@ -163,13 +163,8 @@
                                             unsusceptible
                                         </dt>
                                         <dd>
-                                            The number of people who will not
-                                            contract the pathogen. (If
-                                            <em>lockdown</em>
-                                            is set &ndash which it isn't in the
-                                            default model &ndash then the
-                                            unsusceptible population increases
-                                            as the model progresses.)
+                                            The number of people who cannot
+                                            contract the pathogen.
                                         </dd>
                                         <dt>
                                             susceptible
@@ -277,20 +272,32 @@
                                             uncontagious.)
                                         </dd>
                                         <dt>
-                                            reducedContactMult, reduceAfter
+                                            lockdownContactMul,
+                                            lockdownAfter,
+                                            lockdownIterations,
+                                            lockdownMinBetween,
+                                            lockdownMaxTimes
                                         </dt>
                                         <dd>
                                             When a population has a certain
-                                            number of ill people, quarantine
-                                            measures may be implemented that
-                                            reduce the average number of
-                                            contacts. These two parameter are
-                                            used to reflect this. If
-                                            a region's ill people exceeds the
-                                            value of <em>reduceAfter</em>, then
+                                            number of ill people, lockdown or
+                                            quarantine measures may be
+                                            implemented that reduce the average
+                                            number of contacts. These
+                                            parameters are used to reflect
+                                            this. If a region's ill people
+                                            exceeds the value of
+                                            <em>lockdownAfter</em>, then
                                             <em>avgContacts</em> is reduced by
                                             multiplying it by
-                                            <em>reducedContactMult</em>.
+                                            <em>lockdownContactMult</em>.
+                                            The lockdown lasts
+                                            <em>lockdownIterations</em>.
+                                            The minimum time between successive
+                                            lockdowns is
+                                            <em>lockdownMinBetween</em>. A region
+                                            can have a maximum of
+                                            <em>lockdownMaxTimes</em>.
                                         </dd>
                                         <dt>
                                             probInfectionSummer, summerStart,
@@ -321,19 +328,6 @@
                                             unsusceptible one. (Set to 0.0 in
                                             this particular model but you can
                                             change it.)
-                                        </dd>
-                                        <dt>
-                                            lockdown
-                                        </dt>
-                                        <dd>
-                                            This rate represents
-                                            isolation/quarantining/lockdown of
-                                            the susceptible population once
-                                            infections start in a region. This
-                                            moves people from the susceptible to
-                                            unsusceptible stages, only
-                                            once infections in the region are
-                                            greater than 1.0.
                                         </dd>
                                         <dt>
                                             uncontagious_contagious

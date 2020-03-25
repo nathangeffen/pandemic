@@ -1,0 +1,332 @@
+
+Medium mortality, Medium Infectiousness
+
+No seasons.
+Susceptible: 9,934,545
+Infected: 49,259
+Cured: 41,601,457
+Dead: 336,510
+
+"defaultTransitionRates": {
+	"avgContacts": 10,
+	"probInfection": 0.02,
+	"reducedContactMult": 1.0,
+	"reduceAfter": 100,
+	"probInfectionSummer": 0.006,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"lockdown": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.0008,
+	"default_rate": 0
+    },
+
+
+Susceptible: 13,666,091
+Infected: 496,330
+Cured: 37,456,369
+Dead: 302,980
+(About 13 months for herd immunity)
+
+    "defaultTransitionRates": {
+	"avgContacts": 9,
+	"probInfection": 0.02,
+	"reducedContactMult": 1.0,
+	"reduceAfter": 100,
+	"probInfectionSummer": 0.015,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"lockdown": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.0008,
+	"default_rate": 0
+    },
+
+
+
+**************
+
+High mortality medium infectiousness
+
+Susceptible: 13,733,049
+Infected: 509,180
+Cured: 37,302,373
+Dead: 377,168
+
+    "defaultTransitionRates": {
+	"avgContacts": 9,
+	"probInfection": 0.02,
+	"reducedContactMult": 1.0,
+	"reduceAfter": 100,
+	"probInfectionSummer": 0.015,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"lockdown": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.001,
+	"default_rate": 0
+    },
+
+
+Susceptible,14080063
+Infected,578094
+Cured,36524997
+Dead,738,617
+
+If ill_dead moved to 0.002
+
+If lower summer infectiousness
+Susceptible: 25,530,364
+Infected: 977,691
+Cured: 24,909,980
+Dead: 503,735
+
+**************
+
+Low mortality, Medium Infectiousness
+
+Susceptible: 13,534,436
+Infected: 471,534
+Cured: 37,763,071
+Dead: 152,731
+
+    "defaultTransitionRates": {
+	"avgContacts": 9,
+	"probInfection": 0.02,
+	"reducedContactMult": 1.0,
+	"reduceAfter": 100,
+	"probInfectionSummer": 0.015,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"lockdown": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.0004,
+	"default_rate": 0
+    },
+
+
+Susceptible: 13,437,588
+Infected: 453,710
+Cured: 37,992,059
+Dead: 38,414
+
+(flu mortality)
+
+    "defaultTransitionRates": {
+	"avgContacts": 9,
+	"probInfection": 0.02,
+	"reducedContactMult": 1.0,
+	"reduceAfter": 100,
+	"probInfectionSummer": 0.015,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"lockdown": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.0001,
+	"default_rate": 0
+    },
+
+
+**********
+
+Low mortality, low infectiousness
+
+Susceptible: 23,165,780
+Infected: 1,992,834
+Cured: 26,736,124
+Dead: 27,033
+
+(
+With seasons
+Susceptible: 39,765,744
+Infected: 878,146
+Cured: 11,266,490
+Dead: 11,392)
+
+
+
+    "defaultTransitionRates": {
+	"avgContacts": 8,
+	"probInfection": 0.02,
+	"reducedContactMult": 1.0,
+	"reduceAfter": 100,
+	"probInfectionSummer": 0.015,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"lockdown": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.0001,
+	"default_rate": 0
+    },
+
+
+
+    "defaultTransitionRates": {
+	"avgContacts": 7,
+	"probInfection": 0.02,
+	"reducedContactMult": 1.0,
+	"reduceAfter": 100,
+	"probInfectionSummer": 0.015,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"lockdown": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.0001,
+	"default_rate": 0
+    },
+
+
+Susceptible: 51,890,324
+Infected: 1,530
+Cured: 29,888
+Dead: 30
+
+    "defaultTransitionRates": {
+	"avgContacts": 5,
+	"probInfection": 0.02,
+	"reducedContactMult": 1.0,
+	"reduceAfter": 100,
+	"probInfectionSummer": 0.015,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"lockdown": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.0001,
+	"default_rate": 0
+    },
+
+*****************
+
+High infectiousness, moderate death rate
+
+Herd immunity after 6 months
+
+Susceptible: 814,333
+Infected: 0
+Cured: 50,697,353
+Dead: 410,085
+Cum. infections: 51,107,438
+
+    "defaultTransitionRates": {
+	"avgContacts": 10,
+	"probInfection": 0.04,
+        "lockdownContactMult": 1.0,
+        "lockdownAfter": 100.0,
+        "lockdownIterations": 21,
+        "lockdownMinBetween": 21,
+        "lockdownMaxTimes": 1000000,
+	"probInfectionSummer": 0.015,
+	"summerStart": 270,
+	"summerDuration": 180,
+	"vaccinate": 0,
+	"uncontagious_contagious": 0.18,
+	"contagious_ill": 0.9,
+	"ill_cured": 0.09,
+	"ill_dead": 0.0008,
+	"default_rate": 0
+    },
+
+
+Susceptible: 5,349,684
+Infected: 0
+Cured: 46,287,748
+Dead: 284,339
+Cum. infections: 46,572,087
+{
+    "avgContacts": 10,
+    "probInfection": 0.04,
+    "lockdownContactMult": 1,
+    "lockdownAfter": 100,
+    "lockdownIterations": 21,
+    "lockdownMinBetween": 21,
+    "lockdownMaxTimes": 1000000,
+    "probInfectionSummer": 0.04,
+    "summerStart": 270,
+    "summerDuration": 180,
+    "vaccinate": 0,
+    "uncontagious_contagious": 0.18,
+    "contagious_ill": 0.9,
+    "ill_cured": 0.14,
+    "ill_dead": 0.001,
+    "default_rate": 0
+}
+
+***********************
+
+High infectiousness high deaths
+
+Susceptible: 818,801
+Infected: 0
+Cured: 50,591,434
+Dead: 511,536
+Cum. infections: 51,102,970
+
+{
+    "avgContacts": 10,
+    "probInfection": 0.04,
+    "lockdownContactMult": 1,
+    "lockdownAfter": 100,
+    "lockdownIterations": 21,
+    "lockdownMinBetween": 21,
+    "lockdownMaxTimes": 1000000,
+    "probInfectionSummer": 0.04,
+    "summerStart": 270,
+    "summerDuration": 180,
+    "vaccinate": 0,
+    "uncontagious_contagious": 0.18,
+    "contagious_ill": 0.9,
+    "ill_cured": 0.09,
+    "ill_dead": 0.001,
+    "default_rate": 0
+}
+
+
+
+Susceptible: 5,385,840
+Infected: 8
+Cured: 46,111,044
+Dead: 424,880
+Cum. infections: 46,535,931
+
+{
+    "avgContacts": 10,
+    "probInfection": 0.04,
+    "lockdownContactMult": 1,
+    "lockdownAfter": 100,
+    "lockdownIterations": 21,
+    "lockdownMinBetween": 21,
+    "lockdownMaxTimes": 1000000,
+    "probInfectionSummer": 0.04,
+    "summerStart": 270,
+    "summerDuration": 180,
+    "vaccinate": 0,
+    "uncontagious_contagious": 0.18,
+    "contagious_ill": 0.9,
+    "ill_cured": 0.14,
+    "ill_dead": 0.0015,
+    "default_rate": 0
+}

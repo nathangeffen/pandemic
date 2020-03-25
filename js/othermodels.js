@@ -2,8 +2,8 @@
 
 var modelSouthAfricaDoNothingSeasonal = {
     "ver": "20200322",
-    "name": "SA_do_nothing",
-    "description": "Attempt to model Covid-19 in South Africa. Do nothing scenario. Assumptions: 80% of population is susceptible, infectiousness increases 10-fold in winter, undiagnosed cases = 2 * diagnosed cases. Initial infections per province as of 21 March.",
+    "name": "SA_do_nothing_seasons",
+    "description": "Attempt to model Covid-19 in South Africa. Initial contagous infections per province as of 21 March. Undiagnosed infections per province = 3 x contagious, or 3, whichever is greater. Lower infection rate in summer.",
     "iterations": "365",
     "delay": "0",
     "regions": [
@@ -12,7 +12,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "stages": {
 	        "unsusceptible": 0,
 	        "susceptible": 6712276,
-	        "uncontagious": 2,
+	        "uncontagious": 3,
 	        "contagious": 1
 	    }
         },
@@ -20,7 +20,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "name": "FS",
 	    "stages": {
 		"susceptible": 2745590,
-		"uncontagious": 14,
+		"uncontagious": 42,
 		"contagious": 7
 	    }
 	},
@@ -28,7 +28,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "name": "GP",
 	    "stages": {
 		"susceptible": 12272263,
-		"uncontagious": 250,
+		"uncontagious": 375,
 		"contagious": 125
 	    }
 	},
@@ -36,7 +36,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "name": "LP",
 	    "stages": {
 		"susceptible": 5404868,
-		"uncontagious": 2,
+		"uncontagious": 3,
 		"contagious": 1
 	    }
 	},
@@ -44,7 +44,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "name": "MP",
 	    "stages": {
 		"susceptible": 4039939,
-		"uncontagious": 10,
+		"uncontagious": 15,
 		"contagious": 5
 	    }
 	},
@@ -52,7 +52,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "name": "NC",
 	    "stages": {
 		"susceptible": 1145861,
-		"uncontagious": 0,
+		"uncontagious": 3,
 		"contagious": 0
 	    }
 	},
@@ -60,7 +60,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "name": "KZN",
 	    "stages": {
 		"susceptible": 10267300,
-		"uncontagious": 54,
+		"uncontagious": 81,
 		"contagious": 27
 	    }
 	},
@@ -68,7 +68,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "name": "NW",
 	    "stages": {
 		"susceptible": 3509953,
-		"uncontagious": 0,
+		"uncontagious": 3,
 		"contagious": 0
 	    }
 	},
@@ -76,7 +76,7 @@ var modelSouthAfricaDoNothingSeasonal = {
 	    "name": "WC",
 	    "stages": {
 		"susceptible": 5822734,
-		"uncontagious": 148,
+		"uncontagious": 222,
 		"contagious": 74
 	    }
 	}
@@ -147,20 +147,22 @@ var modelSouthAfricaDoNothingSeasonal = {
 	"symmetrical": 1
     },
     "defaultTransitionRates": {
-	"avgContacts": 10,
-	"probInfection": 0.03,
-	"reducedContactMult": 1.0,
-	"reduceAfter": 100,
-	"probInfectionSummer": 0.003,
-	"summerStart": 270,
-	"summerDuration": 180,
-	"vaccinate": 0,
-	"lockdown": 0,
-	"uncontagious_contagious": 0.5,
-	"contagious_ill": 0.5,
-	"ill_cured": 0.06,
-	"ill_dead": 0.00055,
-	"default_rate": 0
+        "avgContacts": 10,
+        "probInfection": 0.04,
+        "lockdownContactMult": 1,
+        "lockdownAfter": 1000,
+        "lockdownIterations": 21,
+        "lockdownMinBetween": 21,
+        "lockdownMaxTimes": 1000000,
+        "probInfectionSummer": 0.02,
+        "summerStart": 270,
+        "summerDuration": 180,
+        "vaccinate": 0,
+        "uncontagious_contagious": 0.18,
+        "contagious_ill": 0.9,
+        "ill_cured": 0.14,
+        "ill_dead": 0.001,
+        "default_rate": 0
     },
     "mapName": "south_africa",
     "mapRegions": {
@@ -226,8 +228,16 @@ var modelSouthAfricaDoNothingNoSeasons = JSON.parse(
 modelSouthAfricaDoNothingNoSeasons.defaultTransitionRates.probInfectionSummer =
     modelSouthAfricaDoNothingNoSeasons.defaultTransitionRates.probInfection;
 
+modelSouthAfricaDoNothingNoSeasons.name = "SA_do_nothing_no_seasons";
+modelSouthAfricaDoNothingNoSeasons.description = "Attempt to model Covid-19 in South Africa. Initial contagous infections per province as of 21 March. Undiagnosed infections per province = 3 x contagious, or 3, whichever is greater. No seasonal differences."
+
+
 var modelSouthAfricaLockdown = JSON.parse(
     JSON.stringify(modelSouthAfricaDoNothingNoSeasons));
 
-modelSouthAfricaLockdown.defaultTransitionRates.reducedContactMult =
-    0.2;
+modelSouthAfricaLockdown.name = "SA_lockdowns";
+
+modelSouthAfricaLockdown.description = "Attempt to model Covid-19 in South Africa. Initial contagous infections per province as of 21 March. Undiagnosed infections per province = 3 x contagious, or 3, whichever is greater. No seasonal differences. First lockdown for 21 days when 5000 infections, then every 21 subsequent days if more than 10k infections."
+
+
+modelSouthAfricaLockdown.defaultTransitionRates.lockdownContactMult = 0.1;
